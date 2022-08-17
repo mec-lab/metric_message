@@ -1,0 +1,15 @@
+expression, support, number_variables, variables, comments
+-x*y/(0.5*x**2 + 1) - x + 20, -5 5 -5 5 , 2, x  y, bacterial respiration
+-x*y/(0.5*x**2 + 1) + 10, -5 5 -5 5 , 2, x  y, bacterial respiration
+-sin(theta) - 0.5*sin(phi - theta), -5 5 -5 5 , 2, theta  phi, bar magnets
+-sin(phi) + 0.5*sin(phi - theta), -5 5 -5 5 , 2, theta  phi, bar magnets
+0.05*v**2 - sin(theta), -5 5 -5 5 , 2, v  theta, glider
+v - cos(theta)/v, -5 5 -5 5 , 2, v  theta, glider
+-x**2 - 2*x*y + 3*x, -5 5 -5 5 , 2, x  y, Lotka-Volterra
+-x*y - y**2 + 2*y, -5 5 -5 5 , 2, x  y, Lotka-Volterra
+x*(-x - y/(x + 1) + 4), -5 5 -5 5 , 2, x  y, predator prey
+y*(x/(x + 1) - 0.075*y), -5 5 -5 5 , 2, x  y, predator prey
+cos(theta)/(-atan(phi) + pi/2), -5 5 -5 5 , 2, theta  phi, shear flow
+(0.1*sin(phi)**2 + cos(phi)**2)*sin(theta), -5 5 -5 5 , 2, theta  phi, shear flow
+-10*x**3/3 + 10*x/3 + 10*y, -5 5 -5 5 , 2, x  y, van der Pol
+-x/10, -5 5 -5 5 , 2, x  y, van der Pol

@@ -1,0 +1,13 @@
+expression, support, number_variables, variables, comments
+x**3 + x**2 + x, -5 5, 1, x, Nguyen-0
+x**4 + x**3 + x**2 + x, -5 5, 1, x, Nguyen-1
+x**5 + x**4 + x**3 + x**2 + x, -5 5, 1, x, Nguyen-2
+x**6 + x**5 + x**3 + x**2 + x, -5 5, 1, x, Nguyen-3
+sin(x**2)*cos(x) - 1, -5 5, 1, x, Nguyen-4
+sin(x) + sin(x**2 + x), -5 5, 1, x, Nguyen-5
+log(x + 1) + log(x**2 + 1), -0.99 5, 1, x, Nguyen-6
+sqrt(x), -5 5, 1, x, Nguyen-7
+sin(x) + sin(y**2), -5 5, 2, x  y, Nguyen-8
+2*sin(x)*cos(y), -5 5, 2, x  y, Nguyen-9
+x**y, -5 5, 2, x  y, Nguyen-10
+x**4 - x**3 + y**2/2 - y, -5 5, 2, x  y, Nguyen-11
