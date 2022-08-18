@@ -1,6 +1,9 @@
 import sympy as sp
 import numpy as np
+
 import apted
+from apted import APTED, PerEditOperationConfig
+from apted.helpers import Tree
 
 def compute_complexity(expression):
         
@@ -38,15 +41,50 @@ def compute_exact_equivalence(expression_a, expression_b):
 
     return difference == 0
 
+def tree_to_brackets(sp_tree):
+    """
+    helper function for converting from the parentheses-based
+    trees used by sympy to bracket-based trees used by apted
+    """
+
+    brackets_tree = sp_tree.replace("(","{")
+    brackets_tree = brackets_tree.replace(")","}")
+    brackets_tree = brackets_tree.replace(",","}{")
+    brackets_tree = brackets_tree.replace(" ","")
+
+    return "{" + brackets_tree + "}"
+
 def compute_tree_distance(expression_a, expression_b):
     """
     symbolic metric
     
+    compare two equations in terms of tree edit distance
+
+    args:
+        str_eqn1    equation 1, in a string that can be parsed by sympy
+        str_eqn2    equation 2, in a string that can be parsed by sympy
+
+    returns:
+        distance   tree edit distance 
+        mapping    tree edit mapping (how to get from tree1 to tree2)
+
     reported in:
-        
+        (here)
     """
-   
-    return 0 
+
+    sympy_expression_a = sp.simplify(expression_a)
+    sympy_expression_b = sp.simplify(expression_b)
+
+    sp_tree_a = sp.srepr(sympy_expression_a)
+    sp_tree_b = sp.srepr(sympy_expression_b)
+
+    tree_a = Tree.from_text(tree_to_brackets(sp_tree_a))
+    tree_b= Tree.from_text(tree_to_brackets(sp_tree_b))
+
+    ted = APTED(tree_a, tree_b, PerEditOperationConfig(1,1,1))
+    distance = ted.compute_edit_distance()
+    
+    return distance 
 
 def compute_r2(expression_a, expression_b, inputs):
     """

@@ -38,22 +38,25 @@ class TestComputeTreeDistance(unittest.TestCase):
         expression_c = "x**3 + y**3 + 10"
         expression_d = "sin(x)**2 + 1/y**2 + 10"
 
-        dist_aa = compute_tree_distance(expression_a, expression_b)
+        dist_aa = compute_tree_distance(expression_a, expression_a)
         dist_ab = compute_tree_distance(expression_a, expression_b)
-        dist_ac = compute_tree_distance(expression_a, expression_b)
-        dist_ad = compute_tree_distance(expression_a, expression_b)
-        dist_ba = compute_tree_distance(expression_a, expression_b)
-        dist_bb = compute_tree_distance(expression_a, expression_b)
-        dist_bc = compute_tree_distance(expression_a, expression_b)
-        dist_bd = compute_tree_distance(expression_a, expression_b)
-        dist_ca = compute_tree_distance(expression_a, expression_b)
-        dist_cb = compute_tree_distance(expression_a, expression_b)
-        dist_cc = compute_tree_distance(expression_a, expression_b)
-        dist_cd = compute_tree_distance(expression_a, expression_b)
-        dist_da = compute_tree_distance(expression_a, expression_b)
-        dist_db = compute_tree_distance(expression_a, expression_b)
-        dist_dc = compute_tree_distance(expression_a, expression_b)
-        dist_dd = compute_tree_distance(expression_a, expression_b)
+        dist_ac = compute_tree_distance(expression_a, expression_c)
+        dist_ad = compute_tree_distance(expression_a, expression_d)
+
+        dist_ba = compute_tree_distance(expression_b, expression_a)
+        dist_bb = compute_tree_distance(expression_b, expression_b)
+        dist_bc = compute_tree_distance(expression_b, expression_c)
+        dist_bd = compute_tree_distance(expression_b, expression_d)
+
+        dist_ca = compute_tree_distance(expression_c, expression_a)
+        dist_cb = compute_tree_distance(expression_c, expression_b)
+        dist_cc = compute_tree_distance(expression_c, expression_c)
+        dist_cd = compute_tree_distance(expression_c, expression_d)
+
+        dist_da = compute_tree_distance(expression_d, expression_a)
+        dist_db = compute_tree_distance(expression_d, expression_b)
+        dist_dc = compute_tree_distance(expression_d, expression_c)
+        dist_dd = compute_tree_distance(expression_d, expression_d)
 
         self.assertEqual(dist_aa, 0)
         self.assertEqual(dist_bb, 0)
