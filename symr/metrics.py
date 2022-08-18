@@ -36,7 +36,7 @@ def compute_exact_equivalence(expression_a, expression_b):
 
     difference = sp.simplify(simple_expression_a - simple_expression_b)
 
-    return 0
+    return difference == 0
 
 def compute_tree_distance(expression_a, expression_b):
     """
