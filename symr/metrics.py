@@ -1,5 +1,6 @@
 import sympy as sp
 import numpy as np
+import apted
 
 def compute_complexity(expression):
         
@@ -29,7 +30,13 @@ def compute_exact_equivalence(expression_a, expression_b):
         Petersen _et al._ 2019
         La Cava _et al._ 2021
     """
-    pass
+    
+    simple_expression_a = sp.simplify(expression_a)
+    simple_expression_b = sp.simplify(expression_b)
+
+    difference = sp.simplify(simple_expression_a - simple_expression_b)
+
+    return 0
 
 def compute_tree_distance(expression_a, expression_b):
     """
@@ -38,8 +45,8 @@ def compute_tree_distance(expression_a, expression_b):
     reported in:
         
     """
-    pass
-    
+   
+    return 0 
 
 def compute_r2(expression_a, expression_b, inputs):
     """

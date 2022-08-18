@@ -12,6 +12,7 @@ setup(\
                         "numpy>=1.21.6",\
                         "matplotlib==3.3.4",\
                         "scipy==1.5",\
+                        "apted==1.0.3",\
                         "sympy==1.10.1"]
     )
 

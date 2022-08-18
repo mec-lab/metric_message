@@ -5,7 +5,26 @@ import unittest
 import numpy as np
 import sympy as sp
 
-from symr.metrics import compute_tree_distance
+from symr.metrics import compute_tree_distance, compute_exact_equivalence
+
+class TestExactEquivalence(unittest.TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_compute_exact_equivalence(self):
+
+        expression_a = "x**2 + y**2 + 10"
+        expression_b = "x**2 + y**3 + 10"
+
+        exact_ab = compute_exact_equivalence(expression_a, expression_b)
+        exact_aa = compute_exact_equivalence(expression_a, expression_a)
+        exact_bb = compute_exact_equivalence(expression_b, expression_b)
+
+        self.assertTrue(exact_aa)
+        self.assertTrue(exact_bb)
+        self.assertFalse(exact_ab)
+    
 
 class TestComputeTreeDistance(unittest.TestCase):
     
