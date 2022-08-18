@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(\
         name="symr", \
-        packages=["symr"], \
+        packages=["symr", "symr_tests"], \
         version = "0.0", \
         description = "The Metric is the Massage", \
         install_requires=[\
