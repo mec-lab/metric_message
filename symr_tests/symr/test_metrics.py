@@ -26,7 +26,7 @@ class TestExactEquivalence(unittest.TestCase):
         self.assertTrue(exact_bb)
         self.assertFalse(exact_ab)
     
-class TestComputeR2Raw(unittest.TestCase):
+class TestComputeR2(unittest.TestCase):
 
     def setUp(self):
         pass
@@ -56,6 +56,37 @@ class TestComputeR2Raw(unittest.TestCase):
         self.assertTrue(r2_cc.shape == temp_c.shape)
 
 
+    def test_compute_r2(self):
+
+        temp_a = np.random.randn(32,64)
+        temp_b = np.random.randn(32,64)
+
+        temp_c = np.ones((32,64))
+
+        mean_r2_ab = compute_r2(temp_a, temp_b)
+        mean_r2_aa = compute_r2(temp_a, temp_a)
+        mean_r2_cc = compute_r2(temp_c, temp_c)
+        
+        self.assertEqual(mean_r2_aa, 1.0)
+        self.assertLess(mean_r2_ab, mean_r2_aa)
+        self.assertAlmostEqual(mean_r2_cc, 0.0)
+
+    def test_compute_r2_truncated(self):
+
+        temp_a = np.random.randn(32,64)
+        temp_b = np.random.randn(32,64)
+
+        temp_c = np.ones((32,64))
+
+        mean_r2_ab = compute_r2_truncated(temp_a, temp_b)
+        mean_r2_a_anti_a = compute_r2_truncated(temp_a, -temp_a)
+        mean_r2_aa = compute_r2_truncated(temp_a, temp_a)
+        mean_r2_cc = compute_r2_truncated(temp_c, temp_c)
+        
+        self.assertEqual(mean_r2_aa, 1.0)
+        self.assertLess(mean_r2_ab, mean_r2_aa)
+        self.assertAlmostEqual(mean_r2_cc, 0.0)
+        self.assertGreater(mean_r2_a_anti_a, 0.0)
 
 class TestComputeTreeDistance(unittest.TestCase):
     

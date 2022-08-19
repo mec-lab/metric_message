@@ -106,7 +106,7 @@ def compute_r2_raw(targets, predictions):
 
 def compute_r2(targets, predictions):
     
-    r2_raw = compute_r2_raw
+    r2_raw = compute_r2_raw(targets, predictions)
 
     return np.mean(r2_raw)
 
@@ -118,7 +118,7 @@ def compute_r2_truncated(targets, predictions):
         Kamienny _et al._ 2022
     """
 
-    r2_raw = compute_r2_raw
+    r2_raw = compute_r2_raw(targets, predictions)
     # truncate to 0.0 
     r2_truncated = np.clip(r2_raw, 0.0, 1.0)
 
