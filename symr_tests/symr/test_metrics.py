@@ -40,7 +40,7 @@ class TestComputeRelativeError(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_relative_error(self):
+    def test_compute_relative_error(self):
 
         temp_a = np.random.randn(32,64)
         temp_b = np.random.randn(32,64)
