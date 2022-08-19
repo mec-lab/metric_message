@@ -6,7 +6,15 @@ import numpy as np
 import sympy as sp
 
 from symr.metrics import compute_tree_distance, compute_exact_equivalence,\
-        compute_r2_raw, compute_r2, compute_r2_truncated
+        compute_r2_raw, compute_r2, compute_r2_truncated, \
+        compute_isclose_accuracy
+
+"""
+class TestComputeIsCloseAccuracy(unittest.TestCase):
+
+    def setUp(self):
+        pass
+"""
 
 class TestExactEquivalence(unittest.TestCase):
 
@@ -88,6 +96,41 @@ class TestComputeR2(unittest.TestCase):
         self.assertAlmostEqual(mean_r2_cc, 0.0)
         self.assertGreater(mean_r2_a_anti_a, 0.0)
 
+class TestComputeIsCloseAccuracy(unittest.TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_compute_isclose_accuracy(self):
+
+        np.random.seed(13)
+
+        temp_a = np.random.randn(32,64)
+        temp_b = np.random.randn(32,64)
+        temp_c = np.ones((32,64))
+        temp_d = np.ones((20,1))
+        temp_dd = 1.0 * temp_d
+        temp_dd[:1] = 0.0
+
+        isclose_ab = compute_isclose_accuracy(temp_a, temp_b)
+        isclose_aa = compute_isclose_accuracy(temp_a, temp_a)
+
+        isclose_c_smaller_c_true = compute_isclose_accuracy(temp_c, 1.0499 * temp_c, atol=0.00001, rtol=0.05)
+        isclose_c_smaller_c_false = compute_isclose_accuracy(temp_c, 1.0499 * temp_c, atol=0.00001, rtol=0.005)
+
+        isclose_ddd_true = compute_isclose_accuracy(temp_d, temp_dd)
+        isclose_ddd_false = compute_isclose_accuracy(temp_d, temp_dd, threshold=0.999)
+
+        self.assertFalse(isclose_ab)
+        self.assertTrue(isclose_aa)
+
+        self.assertTrue(isclose_c_smaller_c_true)
+        self.assertFalse(isclose_c_smaller_c_false)
+
+        self.assertTrue(isclose_ddd_true)
+        self.assertFalse(isclose_ddd_false)
+
+        
 class TestComputeTreeDistance(unittest.TestCase):
     
     def setUp(self):

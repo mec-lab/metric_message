@@ -7,7 +7,8 @@ import sympy as sp
 
 from symr_tests.symr.test_metrics import TestExactEquivalence, \
         TestComputeTreeDistance,\
-        TestComputeR2Raw
+        TestComputeR2,\
+        TestComputeIsCloseAccuracy
 
 if __name__ == "__main__":
 

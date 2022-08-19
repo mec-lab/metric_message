@@ -135,15 +135,23 @@ def compute_relative_error(expression_a, expression_b, inputs):
         Vastl _et al._ 2022
     """
     pass
-    
-def compute_isclose(expression_a, expression_b, inputs): 
+
+def compute_isclose_accuracy(targets, predictions, atol=0.001, rtol=0.05, threshold=0.95): 
     """
     numerical metric (ad-hoc accuracy proxy)
 
     reported in:
         Biggio _et al._ 2021
+        Kamienny _et al._ 2022 (kind of)
     """
-    pass
+
+    assert targets.shape == predictions.shape, f"expected same shapes {targets.shape}!={predictions.shape}"
+
+    is_close = np.isclose(targets, predictions, atol=atol, rtol=rtol)
+
+    is_close_mean = np.mean(is_close)
+
+    return (is_close_mean >= threshold) 
 
 
 def compute_r2_over_threshold(expression_a, expression_b, inputs, threshold):
