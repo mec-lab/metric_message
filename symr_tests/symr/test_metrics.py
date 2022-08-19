@@ -7,7 +7,7 @@ import sympy as sp
 
 from symr.metrics import compute_tree_distance, compute_exact_equivalence,\
         compute_r2_raw, compute_r2, compute_r2_truncated, \
-        compute_isclose_accuracy
+        compute_isclose_accuracy, compute_r2_over_threshold
 
 """
 class TestComputeIsCloseAccuracy(unittest.TestCase):
@@ -96,6 +96,23 @@ class TestComputeR2(unittest.TestCase):
         self.assertAlmostEqual(mean_r2_cc, 0.0)
         self.assertGreater(mean_r2_a_anti_a, 0.0)
 
+    def test_compute_r2_over_threshold(self): 
+
+        temp_a = np.random.randn(32,64)
+        temp_b = np.random.randn(32,64)
+
+        temp_c = np.ones((32,64))
+
+        r2_threshold_ab = compute_r2_over_threshold(temp_a, temp_b)
+        r2_threshold_aa = compute_r2_over_threshold(temp_a, temp_a)
+
+        r2_threshold_cc = compute_r2_over_threshold(temp_c, temp_c, threshold=-0.1)
+
+        self.assertTrue(r2_threshold_aa)
+        self.assertFalse(r2_threshold_ab)
+        self.assertTrue(r2_threshold_cc) 
+        
+
 class TestComputeIsCloseAccuracy(unittest.TestCase):
 
     def setUp(self):
@@ -179,6 +196,7 @@ class TestComputeTreeDistance(unittest.TestCase):
 
         self.assertEqual(dist_ab, 1)
         self.assertEqual(dist_ac, 2)
+
 
 if __name__ == "__main__":
 

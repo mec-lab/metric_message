@@ -154,12 +154,15 @@ def compute_isclose_accuracy(targets, predictions, atol=0.001, rtol=0.05, thresh
     return (is_close_mean >= threshold) 
 
 
-def compute_r2_over_threshold(expression_a, expression_b, inputs, threshold):
+def compute_r2_over_threshold(targets, predictions, threshold=0.99):
     """
     numerical metric (ad-hoc accuracy proxy)
 
     reported in:
-        Kamienny _et al._ 2022 (with threshold 0.99)
+        Kamienny _et al._ 2022 (with threshold 0.99) (default threshold)
         Biggio _et al._ 2019 (with threshold 0.95)
     """
-    pass
+    
+    r2 = compute_r2(targets, predictions)
+
+    return r2 > threshold
