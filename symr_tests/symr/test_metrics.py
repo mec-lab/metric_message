@@ -5,7 +5,8 @@ import unittest
 import numpy as np
 import sympy as sp
 
-from symr.metrics import compute_tree_distance, compute_exact_equivalence
+from symr.metrics import compute_tree_distance, compute_exact_equivalence,\
+        compute_r2_raw, compute_r2, compute_r2_truncated
 
 class TestExactEquivalence(unittest.TestCase):
 
@@ -25,6 +26,36 @@ class TestExactEquivalence(unittest.TestCase):
         self.assertTrue(exact_bb)
         self.assertFalse(exact_ab)
     
+class TestComputeR2Raw(unittest.TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_compute_r2_raw(self):
+
+        temp_a = np.random.randn(32,64)
+        temp_b = np.random.randn(32,64)
+
+        temp_c = np.ones((32,64))
+
+        r2_ab = compute_r2_raw(temp_a, temp_b)
+        r2_aa = compute_r2_raw(temp_a, temp_a)
+        r2_cc = compute_r2_raw(temp_c, temp_c)
+        
+        mean_r2_ab = np.mean(r2_ab)
+        mean_r2_aa = np.mean(r2_aa)
+        mean_r2_cc = np.mean(r2_cc)
+
+        self.assertEqual(mean_r2_aa, 1.0)
+        self.assertLess(mean_r2_ab, mean_r2_aa)
+        self.assertAlmostEqual(mean_r2_cc, 0.0)
+
+        self.assertTrue(r2_ab.shape == temp_a.shape)
+        self.assertTrue(r2_ab.shape == temp_b.shape)
+        self.assertTrue(r2_aa.shape == temp_a.shape)
+        self.assertTrue(r2_cc.shape == temp_c.shape)
+
+
 
 class TestComputeTreeDistance(unittest.TestCase):
     

@@ -86,21 +86,44 @@ def compute_tree_distance(expression_a, expression_b):
     
     return distance 
 
-def compute_r2(expression_a, expression_b, inputs):
+def compute_r2_raw(targets, predictions):
     """
     numerical metric
+    expression_a is target
     
     """
-    pass
+    
+    target_mean = np.mean(targets)
+    if np.mean(targets - target_mean) == 0.0:
+        
+        return 0. * targets
+    
+    
+    r2_raw =  ( targets - predictions )**2 / \
+             (targets - target_mean)**2
 
-def compute_truncated_r2(expression_a, expression_b, inputs):
+    return 1.0 - r2_raw
+
+def compute_r2(targets, predictions):
+    
+    r2_raw = compute_r2_raw
+
+    return np.mean(r2_raw)
+
+def compute_r2_truncated(targets, predictions):
     """
     numerical metric
     
     reported in:
         Kamienny _et al._ 2022
     """
-    pass
+
+    r2_raw = compute_r2_raw
+    # truncate to 0.0 
+    r2_truncated = np.clip(r2_raw, 0.0, 1.0)
+
+    return np.mean(r2_truncated)
+    
 
 def compute_relative_error(expression_a, expression_b, inputs):
     """
