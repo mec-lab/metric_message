@@ -125,16 +125,22 @@ def compute_r2_truncated(targets, predictions):
     return np.mean(r2_truncated)
     
 
-def compute_relative_error(expression_a, expression_b, inputs):
+def compute_relative_error(targets, predictions):
     """
     numerical metric
 
     relative absolute error
 
+    error is calculated relative to targets; this function is not symmetric
+    i.e. compute_relative_error(a,b) != compute_relative_error(b,a)
+
     reported in:
         Vastl _et al._ 2022
     """
-    pass
+
+    relative_absolute_error = np.mean(np.abs(targets - predictions) / np.abs(targets))
+
+    return relative_absolute_error
 
 def compute_isclose_accuracy(targets, predictions, atol=0.001, rtol=0.05, threshold=0.95): 
     """
