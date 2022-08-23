@@ -8,7 +8,7 @@ import sympy as sp
 from symr.metrics import compute_tree_distance, compute_exact_equivalence,\
         compute_r2_raw, compute_r2, compute_r2_truncated, \
         compute_isclose_accuracy, compute_r2_over_threshold,\
-        compute_relative_error
+        compute_relative_error, compute_shannon_diversity, compute_complexity
 
 """
 class TestComputeIsCloseAccuracy(unittest.TestCase):
@@ -16,6 +16,46 @@ class TestComputeIsCloseAccuracy(unittest.TestCase):
     def setUp(self):
         pass
 """
+
+class TestComputeShannonDiversity(unittest.TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_compute_shannon_diversity(self):
+
+        expression_a = "x"
+        expression_b = "x+y+z"
+        expression_c = "x*y/z"
+
+        h_a = compute_shannon_diversity(expression_a)
+        h_b = compute_shannon_diversity(expression_b)
+        h_c = compute_shannon_diversity(expression_c)
+        h_c2 = compute_shannon_diversity(expression_c)
+
+        self.assertGreater(h_b, h_a)
+        self.assertGreater(h_c, h_a)
+        self.assertEqual(h_c, h_c2)
+
+class TestComputeComplexity(unittest.TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_compute_complexity(self):
+
+        expression_a = "x"
+        expression_b = "x+y+z"
+        expression_c = "x*y/z"
+
+        h_a = compute_complexity(expression_a)
+        h_b = compute_complexity(expression_b)
+        h_c = compute_complexity(expression_c)
+        h_c2 = compute_complexity(expression_c)
+
+        self.assertGreater(h_b, h_a)
+        self.assertGreater(h_c, h_a)
+        self.assertEqual(h_c, h_c2)
 
 class TestExactEquivalence(unittest.TestCase):
 
@@ -222,6 +262,6 @@ class TestComputeTreeDistance(unittest.TestCase):
         self.assertEqual(dist_ac, 2)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": #pragma: no cover
 
     unittest.main(verbosity=2)
