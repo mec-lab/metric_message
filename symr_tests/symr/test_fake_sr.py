@@ -17,17 +17,50 @@ class TestComputeIsCloseAccuracy(unittest.TestCase):
 class TestPolySR(unittest.TestCase):
 
     def setUp(self):
-        pass
+        my_seed = 13
+        my_degrees = 10
+
+        np.random.seed(my_seed)
+        self.model = PolySR(degree=my_degrees) 
+
+    def test_forward(self):
+        expression_a = self.model()
+        expression_b = self.model()
+
+        self.assertEqual(expression_a, expression_b)
 
 class TestFourierSR(unittest.TestCase):
 
     def setUp(self):
-        pass
+        my_seed = 13
+        my_degrees = 10
+
+        np.random.seed(my_seed)
+        self.model = FourierSR(degree=my_degrees) 
+
+    def test_forward(self):
+
+        expression_a = self.model()
+        expression_b = self.model()
+        
+        self.assertEqual(expression_a, expression_b)
 
 class TestRandomSR(unittest.TestCase):
 
     def setUp(self):
-        pass
+        
+        my_seed = 13
+        my_degrees = 10
+
+        np.random.seed(my_seed)
+        self.model = RandomSR(degree=my_degrees) 
+
+    def test_forward(self):
+
+        expression_a = self.model()
+        expression_b = self.model()
+
+        self.assertNotEqual(expression_a, expression_b)
 
 class TestLossFunction(unittest.TestCase):
 
