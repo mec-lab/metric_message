@@ -1,0 +1,101 @@
+expression, support, number_variables, variables, complexity, diversity, comments
+sqrt(2)*exp(-theta**2/2)/(2*sqrt(pi)), 1 3, 1, theta, 14, 2.5798439652180236, Feynman-I.6.2a equation number 1
+sqrt(2)*exp(-theta**2/(2*sigma**2))/(2*sqrt(pi)*sigma), 1 3 1 3, 2, sigma  theta, 20, 2.936120406998092, Feynman-I.6.2 equation number 2
+sqrt(2)*exp(-(theta - theta1)**2/(2*sigma**2))/(2*sqrt(pi)*sigma), 1 3 1 3 1 3, 3, sigma  theta  theta1, 24, 3.1186268889926643, Feynman-I.6.2b equation number 3
+sqrt((-x1 + x2)**2 + (-y1 + y2)**2), 1 5 1 5 1 5 1 5, 4, x1  x2  y1  y2, 17, 2.780466368938682, Feynman-I.8.14 equation number 4
+G*m1*m2/((-x1 + x2)**2 + (-y1 + y2)**2 + (-z1 + z2)**2), 1 2 1 2 1 2 3 4 1 2 3 4 1 2 3 4 1 2 , 9, m1  m2  G  x1  x2  y1  y2  z1  z2, 28, 3.1315061709253724, Feynman-I.9.18 equation number 5
+m_0/sqrt(1 - v**2/c**2), 1 5 1 2 3 10, 3, m_0  v  c, 14, 2.639057329615258, Feynman-I.10.7 equation number 6
+x1*y1 + x2*y2 + x3*y3, 1 5 1 5 1 5 1 5 1 5 1 5, 6, x1  x2  x3  y1  y2  y3, 10, 2.3025850929940455, Feynman-I.11.19 equation number 7
+Nn*mu, 1 5 1 5, 2, mu  Nn, 3, 1.0986122886681096, Feynman-I.12.1 equation number 8
+q1*q2/(4*pi*epsilon*r**2), 1 5 1 5 1 5 1 5, 4, q1  q2  epsilon  r, 13, 2.5232109529528914, Feynman-I.12.2 equation number 10
+q1/(4*pi*epsilon*r**2), 1 5 1 5 1 5, 3, q1  epsilon  r, 12, 2.4410152780267023, Feynman-I.12.4 equation number 11
+Ef*q2, 1 5 1 5, 2, q2  Ef, 3, 1.0986122886681096, Feynman-I.12.5 equation number 12
+q*(B*v*sin(theta) + Ef), 1 5 1 5 1 5 1 5 1 5, 5, q  Ef  B  v  theta, 9, 2.1972245773362196, Feynman-I.12.11 equation number 13
+m*(u**2 + v**2 + w**2)/2, 1 5 1 5 1 5 1 5, 4, m  v  u  w, 13, 2.4240436845341784, Feynman-I.13.4 equation number 9
+G*m1*m2*(1/r2 - 1/r1), 1 5 1 5 1 5 1 5 1 5, 5, m1  m2  r1  r2  G, 15, 2.601568303168499, Feynman-I.13.12 equation number 14
+g*m*z, 1 5 1 5 1 5, 3, m  g  z, 4, 1.3862943611198906, Feynman-I.14.3 equation number 15
+k_spring*x**2/2, 1 5 1 5, 2, k_spring  x, 6, 1.7917594692280547, Feynman-I.14.4 equation number 16
+(-t*u + x)/sqrt(1 - u**2/c**2), 5 10 1 2 3 20 1 2, 4, x  u  c  t, 19, 2.8943995444300383, Feynman-I.15.3x equation number 17
+(t - u*x/c**2)/sqrt(1 - u**2/c**2), 1 5 3 10 1 2 1 5, 4, x  c  u  t, 26, 3.1721826133021325, Feynman-I.15.3t equation number 18
+m_0*v/sqrt(1 - v**2/c**2), 1 5 1 2 3 10, 3, m_0  v  c, 15, 2.6701198898068177, Feynman-I.15.1 equation number 19
+(u + v)/(1 + u*v/c**2), 1 5 1 5 1 5, 3, c  v  u, 16, 2.7249063991292166, Feynman-I.16.6 equation number 20
+(m1*r1 + m2*r2)/(m1 + m2), 1 5 1 5 1 5 1 5, 4, m1  m2  r1  r2, 13, 2.5070264355574183, Feynman-I.18.4 equation number 21
+F*r*sin(theta), 1 5 1 5 0 5, 3, r  F  theta, 5, 1.6094379124341005, Feynman-I.18.12 equation number 22
+m*r*v*sin(theta), 1 5 1 5 1 5 1 5, 4, m  r  v  theta, 6, 1.7917594692280547, Feynman-I.18.14 equation number 23
+m*x**2*(omega**2 + omega_0**2)/4, 1 3 1 3 1 3 1 3, 4, m  omega  omega_0  x, 13, 2.4240436845341784, Feynman-I.24.6 equation number 24
+q/C, 1 5 1 5, 2, q  C, 5, 1.6094379124341005, Feynman-I.25.13 equation number 25
+arcsin(n*sin(theta2)), 0 1 1 5, 2, n  theta2, 5, 1.6094379124341005, Feynman-I.26.2 equation number 26
+1/(n/d2 + 1/d1), 1 5 1 5 1 5, 3, d1  d2  n, 10, 2.2429732264381466, Feynman-I.27.6 equation number 27
+omega/c, 1 10 1 10, 2, omega  c, 5, 1.6094379124341005, Feynman-I.29.4 equation number 28
+sqrt(x1**2 - 2*x1*x2*cos(theta1 - theta2) + x2**2), 1 5 1 5 1 5 1 5, 4, x1  x2  theta1  theta2, 19, 2.886165178199427, Feynman-I.29.16 equation number 29
+Int_0*sin(n*theta/2)**2/sin(theta/2)**2, 1 5 1 5 1 5, 3, Int_0  theta  n, 16, 2.718473401330013, Feynman-I.30.3 equation number 30
+arcsin(lambd/(d*n)), 1 2 2 5 1 5, 3, lambd  d  n, 9, 2.1458417525947544, Feynman-I.30.5 equation number 31
+a**2*q**2/(6*pi*c**3*epsilon), 1 5 1 5 1 5 1 5, 4, q  a  epsilon  c, 17, 2.780466368938682, Feynman-I.32.5 equation number 32
+4*pi*Ef**2*c*epsilon*omega**4*r**2/(3*(omega**2 - omega_0**2)**2), 1 2 1 2 1 2 1 2 1 2 3 5, 6, epsilon  c  Ef  r  omega  omega_0, 25, 3.0237334794589272, Feynman-I.32.17 equation number 33
+B*q*v/p, 1 5 1 5 1 5 1 5, 4, q  v  B  p, 7, 1.945910149055313, Feynman-I.34.8 equation number 34
+omega_0/(1 - v/c), 3 10 1 2 1 5, 3, c  v  omega_0, 10, 2.242973226438147, Feynman-I.34.1 equation number 35
+omega_0*(1 + v/c)/sqrt(1 - v**2/c**2), 3 10 1 2 1 5, 3, c  v  omega_0, 23, 2.9697067997619278, Feynman-I.34.14 equation number 36
+h*omega/(2*pi), 1 5 1 5, 2, omega  h, 7, 1.945910149055313, Feynman-I.34.27 equation number 37
+I1 + I2 + 2*sqrt(I1*I2)*cos(delta), 1 5 1 5 1 5, 3, I1  I2  delta, 12, 2.4260151319598084, Feynman-I.37.4 equation number 38
+epsilon*h**2/(pi*m*q**2), 1 5 1 5 1 5 1 5, 4, m  q  h  epsilon, 14, 2.599301927099795, Feynman-I.38.12 equation number 39
+3*V*pr/2, 1 5 1 5, 2, pr  V, 4, 1.3862943611198906, Feynman-I.39.1 equation number 40
+V*pr/(gama - 1), 2 5 1 5 1 5, 3, gama  pr  V, 8, 2.0253262207700677, Feynman-I.39.11 equation number 41
+T*kb*n/V, 1 5 1 5 1 5 1 5, 4, n  T  V  kb, 7, 1.945910149055313, Feynman-I.39.22 equation number 42
+n_0*exp(-g*m*x/(T*kb)), 1 5 1 5 1 5 1 5 1 5 1 5, 6, n_0  m  x  T  g  kb, 14, 2.5013567436533415, Feynman-I.40.1 equation number 43
+h*omega**3/(2*pi**3*c**2*(exp(h*omega/(2*pi*T*kb)) - 1)), 1 5 1 5 1 5 1 5 1 5, 5, omega  T  h  kb  c, 30, 3.175506757101391, Feynman-I.41.16 equation number 44
+Volt*mu_drift*q/d, 1 5 1 5 1 5 1 5, 4, mu_drift  q  Volt  d, 7, 1.945910149055313, Feynman-I.43.16 equation number 45
+T*kb*mob, 1 5 1 5 1 5, 3, mob  T  kb, 4, 1.3862943611198906, Feynman-I.43.31 equation number 46
+kb*v/(A*(gama - 1)), 2 5 1 5 1 5 1 5, 4, gama  kb  A  v, 11, 2.2515950735848644, Feynman-I.43.43 equation number 47
+T*kb*n*log(V2/V1), 1 5 1 5 1 5 1 5 1 5, 5, n  kb  T  V1  V2, 10, 2.3025850929940455, Feynman-I.44.4 equation number 48
+sqrt(gama*pr/rho), 1 5 1 5 1 5, 3, gama  pr  rho, 8, 2.0794415416798357, Feynman-I.47.23 equation number 49
+c**2*m/sqrt(1 - v**2/c**2), 1 5 1 2 3 10, 3, m  v  c, 17, 2.780466368938682, Feynman-I.48.2 equation number 50
+x1*(alfa*cos(omega*t)**2 + cos(omega*t)), 1 3 1 3 1 3 1 3, 4, x1  omega  t  alfa, 14, 2.586935412951083, Feynman-I.50.26 equation number 51
+A*kappa*(-T1 + T2)/d, 1 5 1 5 1 5 1 5 1 5, 5, kappa  T1  T2  A  d, 11, 2.351673301904631, Feynman-II.2.42 equation number 52
+Pwr/(4*pi*r**2), 1 5 1 5, 2, Pwr  r, 9, 2.1972245773362196, Feynman-II.3.24 equation number 53
+q/(4*pi*epsilon*r), 1 5 1 5 1 5, 3, q  epsilon  r, 12, 2.3410656135621095, Feynman-II.4.23 equation number 54
+p_d*cos(theta)/(4*pi*epsilon*r**2), 1 3 1 3 1 3 1 3, 4, epsilon  p_d  theta  r, 14, 2.599301927099795, Feynman-II.6.11 equation number 55
+3*p_d*z*sqrt(x**2 + y**2)/(4*pi*epsilon*r**5), 1 3 1 3 1 3 1 3 1 3 1 3, 6, epsilon  p_d  r  x  y  z, 22, 3.0448204824645773, Feynman-II.6.15a equation number 56
+3*p_d*sin(theta)*cos(theta)/(4*pi*epsilon*r**3), 1 3 1 3 1 3 1 3, 4, epsilon  p_d  theta  r, 16, 2.736339051105066, Feynman-II.6.15b equation number 57
+3*q**2/(20*pi*d*epsilon), 1 5 1 5 1 5, 3, q  epsilon  d, 14, 2.5013567436533415, Feynman-II.8.7 equation number 58
+Ef**2*epsilon/2, 1 5 1 5, 2, epsilon  Ef, 6, 1.7917594692280547, Feynman-II.8.31 equation number 59
+sigma_den/(epsilon*(chi + 1)), 1 5 1 5 1 5, 3, sigma_den  epsilon  chi, 10, 2.2538575896013517, Feynman-II.10.9 equation number 60
+Ef*q/(m*(-omega**2 + omega_0**2)), 1 3 1 3 1 3 3 5 1 2, 5, q  Ef  m  omega_0  omega, 18, 2.6859453246697877, Feynman-II.11.3 equation number 61
+n_0*(Ef*p_d*cos(theta)/(T*kb) + 1), 1 3 1 3 1 3 1 3 1 3 1 3, 6, n_0  kb  T  theta  p_d  Ef, 14, 2.582306344313967, Feynman-II.11.17 equation number 62
+Ef*n_rho*p_d**2/(3*T*kb), 1 5 1 5 1 5 1 5 1 5, 5, n_rho  p_d  Ef  kb  T, 13, 2.5232109529528914, Feynman-II.11.20 equation number 63
+Ef*alfa*epsilon*n/(-alfa*n/3 + 1), 0 1 0 1 1 2 1 2, 4, n  alfa  epsilon  Ef, 13, 2.506661812497002, Feynman-II.11.27 equation number 64
+alfa*n/(-alfa*n/3 + 1) + 1, 0 1 0 1, 2, n  alfa, 14, 2.5798439652180236, Feynman-II.11.28 equation number 65
+I/(2*pi*c**2*epsilon*r), 1 5 1 5 1 5 1 5, 4, epsilon  c  I  r, 15, 2.5736885997228045, Feynman-II.13.17 equation number 66
+rho_c_0/sqrt(1 - v**2/c**2), 1 5 1 2 3 10, 3, rho_c_0  v  c, 14, 2.639057329615258, Feynman-II.13.23 equation number 67
+rho_c_0*v/sqrt(1 - v**2/c**2), 1 5 1 2 3 10, 3, rho_c_0  v  c, 15, 2.6701198898068177, Feynman-II.13.34 equation number 68
+-B*mom*cos(theta), 1 5 1 5 1 5, 3, mom  B  theta, 6, 1.7917594692280547, Feynman-II.15.4 equation number 69
+-Ef*p_d*cos(theta), 1 5 1 5 1 5, 3, p_d  Ef  theta, 6, 1.7917594692280547, Feynman-II.15.5 equation number 70
+q/(4*pi*epsilon*r*(1 - v/c)), 1 5 1 5 1 5 1 2 3 10, 5, q  epsilon  r  v  c, 20, 2.7136568436859325, Feynman-II.21.32 equation number 71
+sqrt(-pi**2/d**2 + omega**2/c**2), 4 6 1 2 2 4, 3, omega  c  d, 18, 2.8389889331547, Feynman-II.24.17 equation number 72
+Ef**2*c*epsilon, 1 5 1 5 1 5, 3, epsilon  c  Ef, 6, 1.7917594692280547, Feynman-II.27.16 equation number 73
+Ef**2*epsilon, 1 5 1 5, 2, epsilon  Ef, 5, 1.6094379124341005, Feynman-II.27.18 equation number 74
+q*v/(2*pi*r), 1 5 1 5 1 5, 3, q  v  r, 10, 2.2538575896013517, Feynman-II.34.2a equation number 75
+q*r*v/2, 1 5 1 5 1 5, 3, q  v  r, 5, 1.6094379124341005, Feynman-II.34.2 equation number 76
+B*g_*q/(2*m), 1 5 1 5 1 5 1 5, 4, g_  q  B  m, 8, 2.0794415416798357, Feynman-II.34.11 equation number 77
+h*q/(4*pi*m), 1 5 1 5 1 5, 3, q  h  m, 10, 2.2538575896013517, Feynman-II.34.29a equation number 78
+2*pi*B*Jz*g_*mom/h, 1 5 1 5 1 5 1 5 1 5, 5, g_  h  Jz  mom  B, 10, 2.3025850929940455, Feynman-II.34.29b equation number 79
+n_0/(exp(B*mom/(T*kb)) + exp(-B*mom/(T*kb))), 1 3 1 3 1 3 1 3 1 3, 5, n_0  kb  T  mom  B, 15, 2.573688599722805, Feynman-II.35.18 equation number 80
+mom*n_rho*tanh(B*mom/(T*kb)), 1 5 1 5 1 5 1 5 1 5, 5, n_rho  mom  B  kb  T, 13, 2.5070264355574183, Feynman-II.35.21 equation number 81
+H*mom/(T*kb) + M*alfa*mom/(T*c**2*epsilon*kb), 1 3 1 3 1 3 1 3 1 3 1 3 1 3 1 3, 8, mom  H  kb  T  alfa  epsilon  c  M, 24, 3.0724579351310863, Feynman-II.36.38 equation number 82
+B*mom*(chi + 1), 1 5 1 5 1 5, 3, mom  B  chi, 6, 1.7917594692280547, Feynman-II.37.1 equation number 83
+A*Y*x/d, 1 5 1 5 1 5 1 5, 4, Y  A  d  x, 7, 1.945910149055313, Feynman-II.38.3 equation number 84
+Y/(2*sigma + 2), 1 5 1 5, 2, Y  sigma, 8, 2.0794415416798357, Feynman-II.38.14 equation number 85
+1/(exp(h*omega/(2*pi*T*kb)) - 1), 1 5 1 5 1 5 1 5, 4, h  omega  kb  T, 18, 2.5787454278618456, Feynman-III.4.32 equation number 86
+h*omega/(2*pi*(exp(h*omega/(2*pi*T*kb)) - 1)), 1 5 1 5 1 5 1 5, 4, h  omega  kb  T, 25, 2.9687521236893466, Feynman-III.4.33 equation number 87
+4*pi*B*mom/h, 1 5 1 5 1 5, 3, mom  B  h, 8, 2.0794415416798357, Feynman-III.7.38 equation number 88
+sin(2*pi*E_n*t/h)**2, 1 2 1 2 1 4, 3, E_n  t  h, 11, 2.351673301904631, Feynman-III.8.54 equation number 89
+8*pi*Ef*p_d*sin(t*(omega - omega_0)/2)**2/(h*t*(omega - omega_0)**2), 1 3 1 3 1 3 1 3 1 5 1 5, 6, p_d  Ef  t  h  omega  omega_0, 29, 3.2250873309769306, Feynman-III.9.52 equation number 90
+mom*sqrt(Bx**2 + By**2 + Bz**2), 1 5 1 5 1 5 1 5, 4, mom  Bx  By  Bz, 14, 2.5013567436533415, Feynman-III.10.19 equation number 91
+h*n/(2*pi), 1 5 1 5, 2, n  h, 7, 1.945910149055313, Feynman-III.12.43 equation number 92
+4*pi*E_n*d**2*k/h, 1 5 1 5 1 5 1 5, 4, E_n  d  k  h, 11, 2.3978952727983707, Feynman-III.13.18 equation number 93
+I_0*(exp(Volt*q/(T*kb)) - 1), 1 5 1 2 1 2 1 2 1 2, 5, I_0  q  Volt  kb  T, 14, 2.5013567436533415, Feynman-III.14.14 equation number 94
+2*U*(1 - cos(d*k)), 1 5 1 5 1 5, 3, U  k  d, 11, 2.3978952727983707, Feynman-III.15.12 equation number 95
+h**2/(8*pi**2*E_n*d**2), 1 5 1 5 1 5, 3, h  E_n  d, 14, 2.599301927099795, Feynman-III.15.14 equation number 96
+2*pi*alfa/(d*n), 1 5 1 5 1 5, 3, alfa  n  d, 10, 2.2538575896013517, Feynman-III.15.27 equation number 97
+betta*(alfa*cos(theta) + 1), 1 5 1 5 1 5, 3, betta  alfa  theta, 8, 2.0794415416798357, Feynman-III.17.37 equation number 98
+-m*q**4/(8*epsilon**2*h**2*n**2), 1 5 1 5 1 5 1 5 1 5, 5, m  q  h  n  epsilon, 15, 2.573688599722804, Feynman-III.19.51 equation number 99
+-A_vec*q*rho_c_0/m, 1 5 1 5 1 5 1 5, 4, rho_c_0  q  A_vec  m, 8, 2.0253262207700677, Feynman-III.21.20 equation number 100
