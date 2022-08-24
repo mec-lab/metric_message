@@ -120,6 +120,20 @@ class TestComputeR2(unittest.TestCase):
 
         self.assertEqual(r2_ab, check_ab)
         self.assertEqual(r2_aa, check_aa)
+
+        temp_a = np.random.randn(32,100)
+        temp_b = np.random.randn(32,100)
+
+        r2_ab = compute_r2(temp_a, temp_b)
+        r2_aa = compute_r2(temp_a, temp_a)
+
+        check_ab = sklearn.metrics.r2_score(\
+                temp_a.ravel(), temp_b.ravel())
+        check_aa = sklearn.metrics.r2_score(\
+                temp_a.ravel(), temp_a.ravel())
+
+        self.assertEqual(r2_ab, check_ab)
+        self.assertEqual(r2_aa, check_aa)
         
     def test_compute_r2_raw(self):
 

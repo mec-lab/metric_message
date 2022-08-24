@@ -108,7 +108,8 @@ def compute_r2_raw(targets, predictions):
 
 def compute_r2(targets, predictions):
     
-    r2_raw = compute_r2_raw(targets, predictions)
+    
+    r2_raw = compute_r2_raw(targets.reshape(-1,1), predictions.reshape(-1,1))
 
     return r2_raw
 
