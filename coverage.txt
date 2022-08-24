@@ -1,11 +1,11 @@
 Name                              Stmts   Miss  Cover   Missing
 ---------------------------------------------------------------
-symr/fake_sr.py                      50      0   100%
-symr/metrics.py                      61      0   100%
+symr/fake_sr.py                      51      0   100%
+symr/metrics.py                      63      0   100%
 symr_tests/__init__.py                0      0   100%
 symr_tests/symr/__init__.py           0      0   100%
 symr_tests/symr/test_fake_sr.py      49      0   100%
-symr_tests/symr/test_metrics.py     171      0   100%
+symr_tests/symr/test_metrics.py     187      0   100%
 symr_tests/test_all.py                6      0   100%
 ---------------------------------------------------------------
-TOTAL                               337      0   100%
+TOTAL                               356      0   100%
