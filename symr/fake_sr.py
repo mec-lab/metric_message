@@ -81,6 +81,7 @@ class RandomSR(PolySR):
                       "C*x0**5", \
                       "C*x0**6",\
                       "sqrt(abs(x0))"]
+
         super(RandomSR, self).__init__(**kwargs)
         
     def setup_expression(self):
@@ -96,5 +97,7 @@ class RandomSR(PolySR):
         
         # sample a new expression each time.
         self.setup_expression()
-        
+
+        self.expression = str(sp.simplify(self.expression)) 
+
         return self.expression

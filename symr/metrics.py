@@ -94,21 +94,24 @@ def compute_r2_raw(targets, predictions):
     """
     
     target_mean = np.mean(targets)
-    if np.mean(targets - target_mean) == 0.0:
-        
-        return 0. * targets
-    
-    
-    r2_raw =  ( targets - predictions )**2 / \
-             (targets - target_mean)**2
 
-    return 1.0 - r2_raw
+    if np.mean(targets - target_mean) == 0.0:
+        eps = 1e-13
+    else:
+        eps = 0.0
+    
+    
+    ss_residuals = np.sum((targets - predictions)**2)
+    ss_total = np.sum((targets - target_mean)**2)
+
+    return 1.0 - (ss_residuals + eps) / (ss_total + eps)
 
 def compute_r2(targets, predictions):
     
-    r2_raw = compute_r2_raw(targets, predictions)
+    
+    r2_raw = compute_r2_raw(targets.reshape(-1,1), predictions.reshape(-1,1))
 
-    return np.mean(r2_raw)
+    return r2_raw
 
 def compute_r2_truncated(targets, predictions):
     """

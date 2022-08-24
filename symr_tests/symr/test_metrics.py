@@ -10,6 +10,9 @@ from symr.metrics import compute_tree_distance, compute_exact_equivalence,\
         compute_isclose_accuracy, compute_r2_over_threshold,\
         compute_relative_error, compute_shannon_diversity, compute_complexity
 
+import sklearn
+import sklearn.metrics
+
 """
 class TestComputeIsCloseAccuracy(unittest.TestCase):
 
@@ -100,9 +103,38 @@ class TestComputeRelativeError(unittest.TestCase):
 
 class TestComputeR2(unittest.TestCase):
 
-    def setUp(self):
-        pass
 
+    def setUp(self):
+        my_seed = 13
+        np.random.seed(my_seed)
+
+    def test_compute_r2_check(self):
+        temp_a = np.random.randn(32,1)
+        temp_b = np.random.randn(32,1)
+
+        r2_ab = compute_r2(temp_a, temp_b)
+        r2_aa = compute_r2(temp_a, temp_a)
+
+        check_ab = sklearn.metrics.r2_score(temp_a, temp_b)
+        check_aa = sklearn.metrics.r2_score(temp_a, temp_a)
+
+        self.assertEqual(r2_ab, check_ab)
+        self.assertEqual(r2_aa, check_aa)
+
+        temp_a = np.random.randn(32,100)
+        temp_b = np.random.randn(32,100)
+
+        r2_ab = compute_r2(temp_a, temp_b)
+        r2_aa = compute_r2(temp_a, temp_a)
+
+        check_ab = sklearn.metrics.r2_score(\
+                temp_a.ravel(), temp_b.ravel())
+        check_aa = sklearn.metrics.r2_score(\
+                temp_a.ravel(), temp_a.ravel())
+
+        self.assertEqual(r2_ab, check_ab)
+        self.assertEqual(r2_aa, check_aa)
+        
     def test_compute_r2_raw(self):
 
         temp_a = np.random.randn(32,64)
@@ -121,12 +153,6 @@ class TestComputeR2(unittest.TestCase):
         self.assertEqual(mean_r2_aa, 1.0)
         self.assertLess(mean_r2_ab, mean_r2_aa)
         self.assertAlmostEqual(mean_r2_cc, 0.0)
-
-        self.assertTrue(r2_ab.shape == temp_a.shape)
-        self.assertTrue(r2_ab.shape == temp_b.shape)
-        self.assertTrue(r2_aa.shape == temp_a.shape)
-        self.assertTrue(r2_cc.shape == temp_c.shape)
-
 
     def test_compute_r2(self):
 
@@ -158,7 +184,7 @@ class TestComputeR2(unittest.TestCase):
         self.assertEqual(mean_r2_aa, 1.0)
         self.assertLess(mean_r2_ab, mean_r2_aa)
         self.assertAlmostEqual(mean_r2_cc, 0.0)
-        self.assertGreater(mean_r2_a_anti_a, 0.0)
+        self.assertGreaterEqual(mean_r2_a_anti_a, 0.0)
 
     def test_compute_r2_over_threshold(self): 
 
