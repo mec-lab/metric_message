@@ -3,7 +3,6 @@ import json
 import time
 
 import numpy as np
-import torch
 
 from sympy import lambdify
 import sympy as sp
@@ -25,7 +24,7 @@ def loss_function(constants, skeleton, x_input, y_target):
     # this way is faster
     return np.mean((y_target-sp.lambdify("x0", expr=equation)(x_input))**2) 
 
-class PolySR(torch.nn.Module):
+class PolySR():
     def __init__(self, **kwargs):
         super(PolySR, self).__init__()
         
@@ -44,7 +43,7 @@ class PolySR(torch.nn.Module):
         
         self.expression = my_polynomial
         
-    def forward(self, x=None, y=None):
+    def __call__(self, x=None, y=None):
         
         return self.expression
     
@@ -93,7 +92,7 @@ class RandomSR(PolySR):
             self.expression += f"+ {term}"
         
     
-    def forward(self, x=None, y=None):
+    def __call__(self, x=None, y=None):
         
         # sample a new expression each time.
         self.setup_expression()
