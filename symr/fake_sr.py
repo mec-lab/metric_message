@@ -1,21 +1,9 @@
 import os
-import json 
-import time
 
 import numpy as np
 
 from sympy import lambdify
 import sympy as sp
-import sklearn
-import sklearn.metrics
-
-from scipy.optimize import minimize, least_squares    
-
-from pathlib import Path
-from functools import partial
-
-#
-import glob
 
 def loss_function(constants, skeleton, x_input, y_target):
     
@@ -43,6 +31,13 @@ class PolySR():
         
         self.expression = my_polynomial
         
+    def load_parameters(self, filepath=None):
+        """
+        it doesn't matter if a filepath is provided, this is a fake SR method 
+        and has no parameters 
+        """
+        pass
+
     def __call__(self, x=None, y=None):
         
         return self.expression

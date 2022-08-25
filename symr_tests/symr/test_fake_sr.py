@@ -28,6 +28,13 @@ class TestPolySR(unittest.TestCase):
         expression_b = self.model()
 
         self.assertEqual(expression_a, expression_b)
+    
+    def test_load_parameters(self):
+        
+        self.model.load_parameters(filepath="no_filepath")
+        self.model.load_parameters()
+
+        self.assertTrue(True)
 
 class TestFourierSR(unittest.TestCase):
 
