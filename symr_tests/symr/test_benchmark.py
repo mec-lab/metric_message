@@ -21,12 +21,30 @@ class TestEval(unittest.TestCase):
         #my_output = check_output(my_command)
         
         kwargs = {"metrics": "r2", \
-                "sr_method": "RandomSR",\
+                "sr_methods": "RandomSR",\
+                "k_folds": 2,
+                "trials": 1}
+
+        returned_value = evaluate(**kwargs)
+
+        self.assertEqual(0, returned_value)
+
+        kwargs = {"metrics": "r2", \
+                "k_folds": 2,
+                "trials": 1}
+
+        returned_value = evaluate(**kwargs)
+
+        self.assertEqual(0, returned_value)
+
+        kwargs = {\
+                "sr_methods": "RandomSR",\
                 "k_folds": 2}
 
         returned_value = evaluate(**kwargs)
 
         self.assertEqual(0, returned_value)
+
 
 class TestBenchmark(unittest.TestCase):
     """

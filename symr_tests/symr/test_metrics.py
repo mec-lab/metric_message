@@ -8,6 +8,7 @@ import sympy as sp
 from symr.metrics import compute_tree_distance, compute_exact_equivalence,\
         compute_r2_raw, compute_r2, compute_r2_truncated, \
         compute_isclose_accuracy, compute_r2_over_threshold,\
+        get_r2_threshold_function,\
         compute_relative_error, compute_shannon_diversity, compute_complexity
 
 import sklearn
@@ -197,6 +198,23 @@ class TestComputeR2(unittest.TestCase):
         r2_threshold_aa = compute_r2_over_threshold(temp_a, temp_a)
 
         r2_threshold_cc = compute_r2_over_threshold(temp_c, temp_c, threshold=-0.1)
+
+        self.assertTrue(r2_threshold_aa)
+        self.assertFalse(r2_threshold_ab)
+        self.assertTrue(r2_threshold_cc) 
+
+    def test_get_compute_r2_over_threhsold(self):
+
+        temp_a = np.random.randn(32,64)
+        temp_b = np.random.randn(32,64)
+
+        temp_c = np.ones((32,64))
+        my_compute_r2_over_threshold = get_r2_threshold_function(threshold=-0.1)
+
+        r2_threshold_ab = my_compute_r2_over_threshold(temp_a, temp_b)
+        r2_threshold_aa = my_compute_r2_over_threshold(temp_a, temp_a)
+
+        r2_threshold_cc = my_compute_r2_over_threshold(temp_c, temp_c)
 
         self.assertTrue(r2_threshold_aa)
         self.assertFalse(r2_threshold_ab)

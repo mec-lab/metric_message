@@ -175,3 +175,12 @@ def compute_r2_over_threshold(targets, predictions, threshold=0.99):
     r2 = compute_r2(targets, predictions)
 
     return r2 > threshold
+
+def get_r2_threshold_function(threshold):
+
+    def compute_r2_threshold_function(targets, predictions):
+
+        return compute_r2_over_threshold(\
+                targets, predictions, threshold=threshold)
+
+    return compute_r2_threshold_function
