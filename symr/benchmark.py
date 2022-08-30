@@ -155,18 +155,6 @@ def evaluate(**kwargs):
         print(msg)
 
     return 0
-"""
-    msg = "method, expression, predicted, trial, r2, tree_distance, "\
-            "exact, r2_over_95, r2_over_99, r2_over_999, "\
-            "isclose\n"
-"""
-
-
-                
-                
-                
-                
-    
 
 if __name__ == "__main__": #pragma: no cover
     # this scope will be tested, but in a way that doesn't
