@@ -1,12 +1,14 @@
-
-Name                              Stmts   Miss  Cover   Missing
----------------------------------------------------------------
-symr/fake_sr.py                      50      0   100%
-symr/metrics.py                      63      0   100%
-symr_tests/__init__.py                0      0   100%
-symr_tests/symr/__init__.py           0      0   100%
-symr_tests/symr/test_fake_sr.py      49      0   100%
-symr_tests/symr/test_metrics.py     187      0   100%
-symr_tests/test_all.py                6      0   100%
----------------------------------------------------------------
-TOTAL                               355      0   100%
+Name                                Stmts   Miss  Cover   Missing
+-----------------------------------------------------------------
+symr/benchmark.py                      68      3    96%   56, 143-144
+symr/fake_sr.py                        66      4    94%   32, 37, 60, 122
+symr/helpers.py                         5      0   100%
+symr/metrics.py                        67      0   100%
+symr_tests/__init__.py                  0      0   100%
+symr_tests/symr/__init__.py             0      0   100%
+symr_tests/symr/test_benchmark.py      27      0   100%
+symr_tests/symr/test_fake_sr.py        49      0   100%
+symr_tests/symr/test_metrics.py       198      0   100%
+symr_tests/test_all.py                  7      0   100%
+-----------------------------------------------------------------
+TOTAL                                 487      7    99%
