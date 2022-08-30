@@ -32,6 +32,12 @@ def evaluate(**kwargs):
             "isclose": compute_isclose_accuracy\
             }
 
+
+    if "use_bfgs" in kwargs.keys():
+        use_bfgs = kwargs["use_bfgs"]
+    else: 
+        use_bfgs = 0 
+
     if "metrics" in kwargs.keys():
         metrics = kwargs["metrics"]
     else: 
@@ -57,11 +63,13 @@ def evaluate(**kwargs):
     else:
         write_csv = 0 
 
-    # TODO: sample size should be user-selectable
-    sample_size = 200
+    if "sample_size" in kwargs.keys():
+        sample_size = kwargs["sample_size"]
+    else:
+        sample_size = 20
 
     log_lines = []
-    msg = "method, expression, predicted, trial, r2, tree_distance, "\
+    msg = "method, use_bfgs, expression, predicted, trial, r2, tree_distance, "\
             "exact, r2_cuttoff, r2_over_95, r2_over_99, r2_over_999, "\
             "isclose\n"
     log_lines.append(msg)
@@ -77,11 +85,12 @@ def evaluate(**kwargs):
         sr_methods = [sr_methods]
 
     for method in sr_methods:
-        model = method_dict[method]()
         for expr_index, expression in enumerate(expressions):
             for trial in range(trials):
                 # implement k-fold validation here, TODO
                 my_inputs = {}
+                model = method_dict[method](use_bfgs=use_bfgs, \
+                        input_variables=variables[expr_index])
                 for v_index, variable in \
                         enumerate(variables[expr_index][1:].split(" ")):
                     # generate random (uniform) samples for each variable
@@ -130,7 +139,7 @@ def evaluate(**kwargs):
 
                         scores.append(metric_function(targets=y_target, predictions=y_predicted))
 
-                msg += f"{method}, {expression}, {predicted_expression}, {trial}"
+                msg += f"{method}, {use_bfgs}, {expression}, {predicted_expression}, {trial}"
 
                 for metric, score in zip(metric_dict.keys(), scores):
 
@@ -166,6 +175,9 @@ if __name__ == "__main__": #pragma: no cover
 
     parser = argparse.ArgumentParser()
 
+    parser.add_argument("-b", "--use_bfgs", type=int, defauilt=0,\
+            help="use BFGS for post-inference optimization")
+
     parser.add_argument("-m", "--metrics", type=str, nargs="+",\
         default=["exact", "tree_distance", "r2",\
             "r2_over_95", "r2_over_99", "r2_over_999",\
@@ -197,6 +209,9 @@ if __name__ == "__main__": #pragma: no cover
             help="filename to save csv")
     parser.add_argument("-w", "--write_csv", type=int, default=0,\
             help="1 - write csv, 2 - do not write csv, default 0")
+
+    parser.add_argument("-z", "--sample-size", type=int, default=100, \
+            help="number of samples per dataset")
 
     args = parser.parse_args()
 

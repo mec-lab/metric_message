@@ -20,16 +20,8 @@ class TestEval(unittest.TestCase):
     def test_evaluate(self):
         #my_output = check_output(my_command)
         
-        kwargs = {"metrics": "r2", \
-                "sr_methods": "RandomSR",\
-                "k_folds": 2,
-                "trials": 1}
-
-        returned_value = evaluate(**kwargs)
-
-        self.assertEqual(0, returned_value)
-
-        kwargs = {"metrics": "r2", \
+        kwargs = {\
+                "sr_methods": "PolySR",\
                 "k_folds": 2,
                 "trials": 1}
 
@@ -38,13 +30,26 @@ class TestEval(unittest.TestCase):
         self.assertEqual(0, returned_value)
 
         kwargs = {\
-                "sr_methods": "RandomSR",\
-                "k_folds": 2}
+                "metrics": "exact",\
+                "k_folds": 2,
+                "trials": 1}
 
         returned_value = evaluate(**kwargs)
 
         self.assertEqual(0, returned_value)
 
+        kwargs = {\
+                "sr_methods": ["PolySR", "RandomSR", "FourierSR"],\
+                "sample_size": = 10,\
+                "metrics": "exact",\
+                "write_csv": 1,\
+                "use_bfgs": 1,\
+                "output_filename": "results/testing.csv",\
+                "k_folds": 2}
+
+        returned_value = evaluate(**kwargs)
+
+        self.assertEqual(0, returned_value)
 
 class TestBenchmark(unittest.TestCase):
     """
