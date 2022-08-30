@@ -25,39 +25,45 @@ def evaluate(**kwargs):
             "r2": compute_r2,\
             "tree_distance": compute_tree_distance,\
             "exact": compute_exact_equivalence,\
+            "r2_cutoff": compute_r2_truncated,\
             "r2_over_95": get_r2_threshold_function(threshold=0.95),\
             "r2_over_99": get_r2_threshold_function(threshold=0.99),\
             "r2_over_999": get_r2_threshold_function(threshold=0.999),\
-            "r2_cutoff": compute_r2_truncated,\
             "isclose": compute_isclose_accuracy\
             }
 
     if "metrics" in kwargs.keys():
         metrics = kwargs["metrics"]
     else: 
-        print("warning, no metrics specified, using default r^2")
         metrics = ["r2"]
 
     if "sr_methods" in kwargs.keys():
         sr_methods = kwargs["sr_methods"]
     else:
-        print("warning, no method specified, using default RandomSR")
         sr_methods = ["RandomSR"]
 
     if "trials" in kwargs.keys():
         trials = kwargs["trials"]
     else:
-        print("warning, number of trials not specified using default 1")
         trials = 1
+
+    if "write_csv" in kwargs.keys():
+        write_csv = kwargs["write_csv"]
+    else:
+        write_csv = False 
+
+    if "output_filename" in kwargs.keys() and write_csv:
+        output_filename = kwargs["output_filename"]
+    else:
+        write_csv = 0 
 
     # TODO: sample size should be user-selectable
     sample_size = 200
 
     log_lines = []
     msg = "method, expression, predicted, trial, r2, tree_distance, "\
-            "exact, r2_over_95, r2_over_99, r2_over_999, "\
+            "exact, r2_cuttoff, r2_over_95, r2_over_99, r2_over_999, "\
             "isclose\n"
-    print(msg)
     log_lines.append(msg)
 
     # load benchmark with default filepath
@@ -128,11 +134,16 @@ def evaluate(**kwargs):
 
                 for metric, score in zip(metric_dict.keys(), scores):
 
-                    print(f"{metric} : {score}")
 
                     msg += f", {score}"
 
-                        
+                msg += "\n"
+
+    if write_csv:
+        with open(output_filename, "w") as f:
+            f.writelines(msg)
+    else: 
+        print(msg)
 
     return 0
 """
@@ -182,12 +193,15 @@ if __name__ == "__main__": #pragma: no cover
     parser.add_argument("-t", "--trials", type=int, default=1,\
             help="number of trials per expression during testing")
 
+    parser.add_argument("-o", "--output_filename", type=str, default="results/temp.csv",\
+            help="filename to save csv")
+    parser.add_argument("-w", "--write_csv", type=int, default=0,\
+            help="1 - write csv, 2 - do not write csv, default 0")
+
     args = parser.parse_args()
 
     kwargs = dict(args._get_kwargs())
 
 
     
-    print(kwargs)
     evaluate(**kwargs)
-    print("all ok")
