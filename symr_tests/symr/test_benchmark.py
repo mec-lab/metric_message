@@ -40,7 +40,7 @@ class TestEval(unittest.TestCase):
 
         kwargs = {\
                 "sr_methods": ["PolySR", "RandomSR", "FourierSR"],\
-                "sample_size": = 10,\
+                "sample_size": 10,\
                 "metrics": "exact",\
                 "write_csv": 1,\
                 "use_bfgs": 1,\
