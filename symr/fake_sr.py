@@ -27,6 +27,16 @@ def loss_function(constants, skeleton, x_input, y_target):
 class PolySR():
     def __init__(self, **kwargs):
         super(PolySR, self).__init__()
+
+        if "input_variables" in kwargs.keys():
+            self.variables = kwargs["input_variables"][1:].split(" ")
+        else:
+            self.variables = ["x"]
+
+        if "use_bfgs" in kwargs.keys():
+            self.use_bfgs = kwargs["use_bfgs"]
+        else:
+            self.use_bfgs = False
         
         self.degree = kwargs["degree"] if "degree" in kwargs.keys() else 5
         self.setup_expression()
@@ -35,17 +45,23 @@ class PolySR():
         
         my_polynomial = ""
         
-        for ii in range(self.degree,0,-1):
-            
-            my_polynomial += f"C*x0**{ii}+"
+        for variable in self.variables:
+            for ii in range(self.degree,0,-1):
+                
+                my_polynomial += f"C*{variable}**{ii}+"
             
         my_polynomial += "C"
         
         self.expression = my_polynomial
         
-    def __call__(self, x=None, y=None):
+    def __call__(self, y=None, **kwargs):
         
-        return self.expression
+        if self.use_bfgs:
+            my_expression = self.expression.replace("C", "1.0")
+        else:
+            my_expression = self.expression.replace("C", "1.0")
+        
+        return my_expression
     
 class FourierSR(PolySR):
     def __init__(self, **kwargs):
@@ -55,9 +71,10 @@ class FourierSR(PolySR):
         
         my_fourier = ""
         
-        for ii in range(self.degree,0,-1):
-            
-            my_fourier += f"C*sin(x0*{ii}+C)+"
+        for variable in self.variables:
+            for ii in range(self.degree,0,-1):
+                
+                my_fourier += f"C*sin({variable}*{ii}+C)+"
             
         my_fourier += "C"
         
@@ -87,16 +104,23 @@ class RandomSR(PolySR):
         
         # sample expression
         self.expression = "C"
-        for ii in range(self.degree):
-            term = np.random.choice(self.terms, p=[1/len(self.terms) for t in self.terms])
-            self.expression += f"+ {term}"
+        for variable in self.variables:
+            for ii in range(self.degree):
+                term = np.random.choice(self.terms, p=[1/len(self.terms) for t in self.terms])
+                my_term = term.replace("x0", variable)
+                self.expression += f"+ {my_term}"
         
     
-    def __call__(self, x=None, y=None):
+    def __call__(self, y=None, **kwargs):
         
         # sample a new expression each time.
         self.setup_expression()
 
         self.expression = str(sp.simplify(self.expression)) 
 
-        return self.expression
+        if self.use_bfgs:
+            my_expression = self.expression.replace("C", "1.0")
+        else:
+            my_expression = self.expression.replace("C", "1.0")
+
+        return my_expression

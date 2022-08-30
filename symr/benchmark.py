@@ -1,6 +1,7 @@
 import argparse
 
 import numpy as np
+import sympy as sp
 
 from symr.fake_sr import RandomSR, PolySR, FourierSR
 
@@ -53,7 +54,7 @@ def evaluate(**kwargs):
     sample_size = 200
 
     log_lines = []
-    msg = "method, expression, trial, r2, tree_distance, "\
+    msg = "method, expression, predicted, trial, r2, tree_distance, "\
             "exact, r2_over_95, r2_over_99, r2_over_999, "\
             "isclose\n"
     print(msg)
@@ -66,33 +67,86 @@ def evaluate(**kwargs):
     supports = [elem.split(",")[1] for elem in benchmark[1:]]
     variables = [elem.split(",")[3] for elem in benchmark[1:]]
 
+    if type(sr_methods) is str:
+        sr_methods = [sr_methods]
+
     for method in sr_methods:
+        model = method_dict[method]()
         for expr_index, expression in enumerate(expressions):
-            for metric in metrics:
-                for trial in range(trials):
-                    # implement k-fold validation here, TODO
-                    my_inputs = {}
-                    for v_index, variable in \
-                            enumerate(variables[expr_index][1:].split(" ")):
+            for trial in range(trials):
+                # implement k-fold validation here, TODO
+                my_inputs = {}
+                for v_index, variable in \
+                        enumerate(variables[expr_index][1:].split(" ")):
+                    # generate random (uniform) samples for each variable
+                    # within support range
+                    
+                    low = float(\
+                            supports[expr_index][1:].split(" ")[v_index+0])
+                    high = float(\
+                            supports[expr_index][1:].split(" ")[v_index+1])
+                    my_stretch = high - low
+
+                    my_inputs[variable] = np.random.rand(sample_size,1)
+                    my_inputs[variable] = my_stretch \
+                            * my_inputs[variable] - low
                         
-                        low = float(\
-                                supports[expr_index][1:].split(" ")[v_index+0])
-                        high = float(\
-                                supports[expr_index][1:].split(" ")[v_index+1])
-                        my_stretch = high - low
+                lambda_variables = ",".join(variables[expr_index][1:].split(" "))
 
-                        my_inputs[variable] = np.random.rand(sample_size,1)
-                        my_inputs[variable] = my_stretch \
-                                * my_inputs[variable] - low
+                target_function = sp.lambdify(\
+                        lambda_variables, \
+                        expr=expression)
 
-                    pass
+                y_target = target_function(**my_inputs)
+
+                predicted_expression = model( \
+                        target=y_target, \
+                        **my_inputs)
+
+
+                predicted_function = sp.lambdify(\
+                        lambda_variables, \
+                        expr=predicted_expression)
+
+                y_predicted = predicted_function(\
+                        **my_inputs)
+
+                scores = []
+                for metric in metric_dict.keys():
+                    
+                    if metric in ["tree_distance", "exact"]:
+                        scores.append(metric_dict[metric](expression, predicted_expression))
+                    else:
+                        if metric in metrics:
+                            metric_function = metric_dict[metric]
+                        else:
+                            metric_function = lambda **kwargs: "None"
+
+                        scores.append(metric_function(targets=y_target, predictions=y_predicted))
+
+                msg += f"{method}, {expression}, {predicted_expression}, {trial}"
+
+                for metric, score in zip(metric_dict.keys(), scores):
+
+                    print(f"{metric} : {score}")
+
+                    msg += f", {score}"
+
+                        
+
+    return 0
+"""
+    msg = "method, expression, predicted, trial, r2, tree_distance, "\
+            "exact, r2_over_95, r2_over_99, r2_over_999, "\
+            "isclose\n"
+"""
+
 
                 
                 
                 
                 
     
-    return 0
 
 if __name__ == "__main__": #pragma: no cover
     # this scope will be tested, but in a way that doesn't
@@ -133,5 +187,7 @@ if __name__ == "__main__": #pragma: no cover
     kwargs = dict(args._get_kwargs())
 
 
+    
     print(kwargs)
+    evaluate(**kwargs)
     print("all ok")
