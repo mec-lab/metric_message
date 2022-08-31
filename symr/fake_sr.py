@@ -13,16 +13,12 @@ from scipy.optimize import minimize, least_squares
 
 from pathlib import Path
 from functools import partial
+from symr.metrics import get_loss_function
 
+from scipy.optimize import minimize
 #
 import glob
 
-def loss_function(constants, skeleton, x_input, y_target):
-    
-    equation = skeleton.replace('C','{}').format(*constants)
-    
-    # this way is faster
-    return np.mean((y_target-sp.lambdify("x0", expr=equation)(x_input))**2) 
 
 class PolySR():
     def __init__(self, **kwargs):
@@ -54,10 +50,32 @@ class PolySR():
         
         self.expression = my_polynomial
         
-    def __call__(self, y=None, **kwargs):
+    def optimize(self, target, **kwargs):
+
+        c = [1.0 for elem in self.expression if elem=="C"]
+
+        loss_function = get_loss_function(self.expression, y_target=target, **kwargs)
+
+        try:
+            optimized = minimize(loss_function, c, method="BFGS")
+        except:
+            import pdb; pdb.set_trace()
+
+        optimized_expression = ""
+        constants_placed = 0
+        for my_char in self.expression:
+            if my_char == "C":
+                optimized_expression += f"{optimized.x[constants_placed]}"
+                constants_placed += 1
+            else:
+                optimized_expression += my_char
+
+        return optimized_expression 
+
+    def __call__(self, target=None, **kwargs):
         
         if self.use_bfgs:
-            my_expression = self.expression.replace("C", "1.0")
+            my_expression = self.optimize(target=target, **kwargs)
         else:
             my_expression = self.expression.replace("C", "1.0")
         
@@ -111,16 +129,11 @@ class RandomSR(PolySR):
                 self.expression += f"+ {my_term}"
         
     
-    def __call__(self, y=None, **kwargs):
+    def __call__(self, target=None, **kwargs):
         
         # sample a new expression each time.
         self.setup_expression()
 
-        self.expression = str(sp.simplify(self.expression)) 
-
-        if self.use_bfgs:
-            my_expression = self.expression.replace("C", "1.0")
-        else:
-            my_expression = self.expression.replace("C", "1.0")
+        my_expression = super().__call__(target=target, **kwargs)
 
         return my_expression

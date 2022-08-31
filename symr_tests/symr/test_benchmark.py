@@ -30,6 +30,7 @@ class TestEval(unittest.TestCase):
         self.assertEqual(0, returned_value)
 
         kwargs = {\
+                "sr_methods": ["PolySR", "RandomSR", "FourierSR"],\
                 "metrics": "exact",\
                 "k_folds": 2,
                 "trials": 1}
@@ -39,13 +40,12 @@ class TestEval(unittest.TestCase):
         self.assertEqual(0, returned_value)
 
         kwargs = {\
-                "sr_methods": ["PolySR", "RandomSR", "FourierSR"],\
                 "sample_size": 10,\
                 "metrics": "exact",\
                 "write_csv": 1,\
                 "use_bfgs": 1,\
                 "output_filename": "results/testing.csv",\
-                "k_folds": 2}
+                "k_folds": 1}
 
         returned_value = evaluate(**kwargs)
 

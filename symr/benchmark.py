@@ -46,7 +46,7 @@ def evaluate(**kwargs):
     if "sr_methods" in kwargs.keys():
         sr_methods = kwargs["sr_methods"]
     else:
-        sr_methods = ["RandomSR"]
+        sr_methods = ["PolySR"]
 
     if "trials" in kwargs.keys():
         trials = kwargs["trials"]
