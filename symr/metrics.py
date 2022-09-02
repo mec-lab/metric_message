@@ -145,6 +145,23 @@ def compute_relative_error(targets, predictions):
 
     return relative_absolute_error
 
+def compute_relative_squared_error(targets, predictions):
+    """
+    numerical metric
+
+    relative absolute error
+
+    error is calculated relative to targets; this function is not symmetric
+    i.e. compute_relative_error(a,b) != compute_relative_error(b,a)
+
+    reported in:
+        Vastl _et al._ 2022
+    """
+
+    relative_squared_error = np.mean(np.abs(targets - predictions)**2 / np.abs(targets)**2)
+
+    return relative_squared_error
+
 def compute_isclose_accuracy(targets, predictions, atol=0.001, rtol=0.05, threshold=0.95): 
     """
     numerical metric (ad-hoc accuracy proxy)
@@ -184,3 +201,25 @@ def get_r2_threshold_function(threshold):
                 targets, predictions, threshold=threshold)
 
     return compute_r2_threshold_function
+
+def get_loss_function(skeleton, y_target, \
+        compute_loss=compute_relative_squared_error, **kwargs):
+
+    variables = ", ".join([key for key in kwargs.keys()])
+    my_inputs = kwargs
+
+
+    def loss_function(constants):
+
+        expression = skeleton.replace('C','{}').format(*constants)
+
+        expression_function = sp.lambdify(variables, expr=expression)
+
+        predictions = expression_function(**my_inputs)
+
+        loss = compute_loss(y_target, predictions)
+
+        return loss
+
+    return loss_function
+
