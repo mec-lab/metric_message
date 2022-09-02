@@ -56,10 +56,7 @@ class PolySR():
 
         loss_function = get_loss_function(self.expression, y_target=target, **kwargs)
 
-        try:
-            optimized = minimize(loss_function, c, method="BFGS")
-        except:
-            import pdb; pdb.set_trace()
+        optimized = minimize(loss_function, c, method="BFGS")
 
         optimized_expression = ""
         constants_placed = 0

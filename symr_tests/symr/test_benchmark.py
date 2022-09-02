@@ -22,7 +22,7 @@ class TestEval(unittest.TestCase):
         
         kwargs = {\
                 "sr_methods": "PolySR",\
-                "k_folds": 2,
+                "k_folds": 1,
                 "trials": 1}
 
         returned_value = evaluate(**kwargs)
@@ -32,7 +32,7 @@ class TestEval(unittest.TestCase):
         kwargs = {\
                 "sr_methods": ["PolySR", "RandomSR", "FourierSR"],\
                 "metrics": "exact",\
-                "k_folds": 2,
+                "k_folds": 1,
                 "trials": 1}
 
         returned_value = evaluate(**kwargs)
