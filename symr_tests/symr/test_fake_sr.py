@@ -6,7 +6,8 @@ import numpy as np
 import sympy as sp
 
 
-from symr.fake_sr import RandomSR, PolySR, FourierSR, loss_function
+from symr.fake_sr import RandomSR, PolySR, FourierSR
+from symr.metrics import get_loss_function
 
 """
 class TestComputeIsCloseAccuracy(unittest.TestCase):
@@ -79,6 +80,7 @@ class TestLossFunction(unittest.TestCase):
         constants_a = [1.0] * 5
         constants_b = [0.5] * 5
 
+
         expression = "C*x0 + x0**C + C - 2*C*x0 + sin(x0*C)"
 
         expression_a = expression.replace('C','{}').format(*constants_a)
@@ -87,8 +89,10 @@ class TestLossFunction(unittest.TestCase):
 
         y_target = sp.lambdify("x0", expr=expression_a)(x_input) 
 
-        loss_aa = loss_function(constants_a, expression, x_input, y_target) 
-        loss_ab = loss_function(constants_b, expression, x_input, y_target) 
+        loss_function = get_loss_function(expression, y_target, x0=x_input)   
+
+        loss_aa = loss_function(constants_a) 
+        loss_ab = loss_function(constants_b) 
 
         self.assertGreater(loss_ab, loss_aa)
         self.assertEqual(loss_aa, 0.0)

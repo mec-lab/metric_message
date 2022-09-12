@@ -1,3 +1,9 @@
+The GNU LGPL v3 license applies to the code in this repository. 
+Assets (in folder `assets`), and model parameters (in folder `parameters`) are not covered by this license. 
+
+This repository includes code for assessing several external symbolic regression projects. 
+The code and parameters from other projects is subject to their own respective licenses. 
+
                   GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
@@ -166,9 +172,4 @@ Library.
 
 A. Addendum: Applicability of License
 
-The GNU LGPL v3 license descrbied above applies to the code in this repository. 
-Assets (in folder `assets`), and model parameters (in folder `parameters`) are not covered by this license. 
-
-This repository includes code for assessing several external symbolic regression projects. 
-The code and parameters from other projects is subject to their own respective licenses. 
 

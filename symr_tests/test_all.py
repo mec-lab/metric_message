@@ -19,6 +19,8 @@ from symr_tests.symr.test_fake_sr import TestPolySR,\
         TestLossFunction 
 
 from symr_tests.symr.test_wrappers import TestBaseWrapper
+from symr_tests.symr.test_benchmark import TestEval,\
+        TestBenchmark
 
 if __name__ == "__main__": #pragma: no cover    
 
