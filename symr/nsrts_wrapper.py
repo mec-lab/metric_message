@@ -43,10 +43,15 @@ class NSRTSWrapper(BaseWrapper):
         x = None
 
         for key in kwargs.keys():
-            if x == None:
+            if x is None:
                 x = kwargs[key][:,None]
             elif x.shape[-1] < 3:
-                x = np.append(x, kwargs[key], axis=-1) 
+                my_x = kwargs[key]
+                if len(my_x.shape) == 2:
+                    x = np.append(x, my_x, axis=-1) 
+                else:
+                    x = np.append(x, my_x[:,None], axis=-1) 
+
 
         
         if self.use_bfgs:

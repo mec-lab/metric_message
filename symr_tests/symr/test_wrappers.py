@@ -72,7 +72,38 @@ class TestNSRTSWrapper(unittest.TestCase):
         self.assertEqual(str, type(expression))
         self.assertTrue(True)
                 
+    def test_nsrts_multi(self):
 
+        nsrts = NSRTSWrapper(use_bfgs=True)
+        my_inputs = {"x_1": np.arange(0,1.0,0.1),\
+                "x_2": np.arange(0,1.0,0.1),\
+                "x_3": np.arange(0,1.0,0.1),\
+                }
+        y = np.array(my_inputs["x_1"]**2+ np.sin(my_inputs["x_2"]) + my_inputs["x_3"])
+
+        expression = nsrts(target=y, **my_inputs)
+
+        my_vars = ",".join([key for key in my_inputs.keys()])
+        sp_expression = sp.sympify(expression)
+        fn_expression = sp.lambdify(my_vars, expression)
+        
+        _ = fn_expression(**my_inputs)
+
+        self.assertEqual(str, type(expression))
+        self.assertTrue(True)
+
+        my_inputs = {"x_1": np.arange(0,1.0,0.1),\
+                "x_2": np.arange(0,1.0,0.1),\
+                }
+
+        my_vars = ",".join([key for key in my_inputs.keys()])
+        sp_expression = sp.sympify(expression)
+        fn_expression = sp.lambdify(my_vars, expression)
+        
+        _ = fn_expression(**my_inputs)
+
+        self.assertEqual(str, type(expression))
+        self.assertTrue(True)
 
 
 if __name__ == "__main__": #pragma: no cover    
