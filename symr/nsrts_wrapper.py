@@ -13,6 +13,8 @@ from nesymres.utils import load_metadata_hdf5
 from nesymres.dclasses import FitParams, NNEquation, BFGSParams
 import omegaconf
 
+from functools import partial
+
 import json
 
 if "NSRTS_DIR" in os.environ.keys():
@@ -24,13 +26,34 @@ class NSRTSWrapper(BaseWrapper):
 
     def __init__(self, **kwargs):
 
+        if "use_bfgs" in kwargs.keys():
+            self.use_bfgs = kwargs["use_bfgs"]
+        else:
+            self.use_bfgs = False
+
         self.my_beam_width = 1
         self.initialize_model()
         self.load_parameters()
 
     def __call__(self, target, **kwargs):
         
-        expression = "0.0 " + "".join([f"+ {key} " for key in kwargs.keys()])
+            
+        fitfunc = partial(self.model.fitfunc, cfg_params=self.params_fit)
+
+        x = None
+
+        for key in kwargs.keys():
+            if x == None:
+                x = kwargs[key][:,None]
+            elif x.shape[-1] < 3:
+                x = np.append(x, kwargs[key], axis=-1) 
+
+        
+        if self.use_bfgs:
+            output = fitfunc(x, target.squeeze())
+            expression = output["best_bfgs_preds"][0]
+        else:
+            assert False, "NSRTS requires BFGS"
 
         return expression
 
@@ -58,7 +81,7 @@ class NSRTSWrapper(BaseWrapper):
         # adjust this parameter up for greater accuracy and longer runtime
         self.config.inference.beam_size = self.my_beam_width
 
-        params_fit = FitParams(word2id=eq_setting["word2id"], 
+        self.params_fit = FitParams(word2id=eq_setting["word2id"], 
                                     id2word={int(k): v for k,v in eq_setting["id2word"].items()}, 
                                     una_ops=eq_setting["una_ops"], 
                                     bin_ops=eq_setting["bin_ops"], 

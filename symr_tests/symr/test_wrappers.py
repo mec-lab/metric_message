@@ -58,14 +58,14 @@ class TestNSRTSWrapper(unittest.TestCase):
 
     def test_instantiate(self):
 
-        nsrts = NSRTSWrapper()
-        my_inputs = {"x": np.arange(0,1.0,0.1)}
-        y = np.array(my_inputs["x"]**2)
+        nsrts = NSRTSWrapper(use_bfgs=True)
+        my_inputs = {"x_1": np.arange(0,1.0,0.1)}
+        y = np.array(my_inputs["x_1"]**2)
 
         expression = nsrts(target=y, **my_inputs)
 
         sp_expression = sp.sympify(expression)
-        fn_expression = sp.lambdify("x", expression)
+        fn_expression = sp.lambdify("x_1", expression)
         
         _ = fn_expression(**my_inputs)
 
