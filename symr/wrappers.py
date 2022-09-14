@@ -19,7 +19,11 @@ class BaseWrapper(metaclass=abc.ABCMeta):
         pass
 
     @abstractmethod
-    def __call__(self, x, y): #pragma: no cover 
+    def __call__(self, target, **kwargs): #pragma: no cover 
+        """
+        target is e.g. the y value or other quantity returned by the function
+        **kwargs contains the input variables, which may include several input variables
+        """
         pass
 
     @abstractmethod
@@ -29,3 +33,4 @@ class BaseWrapper(metaclass=abc.ABCMeta):
     @abstractmethod
     def load_parameters(self): #pragma: no cover 
         pass
+
