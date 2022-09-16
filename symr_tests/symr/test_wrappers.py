@@ -62,6 +62,25 @@ class TestSymGPTWrapper(unittest.TestCase):
         
         model = SymGPTWrapper() 
 
+        self.assertTrue(True)
+
+    def test_call(self):
+
+        model = SymGPTWrapper() 
+
+        my_inputs = {"x1": np.arange(-1,1.0,0.01)}
+        y = np.array(my_inputs["x1"]**2)
+
+        expression = model(target=y, **my_inputs)
+
+        my_vars = ",".join([key for key in my_inputs.keys()])
+        sp_expression = sp.sympify(expression)
+        fn_expression = sp.lambdify(my_vars, expression)
+        
+        _ = fn_expression(**my_inputs)
+
+        self.assertEqual(str, type(expression))
+
 class TestNSRTSWrapper(unittest.TestCase):
 
     def setUp(self):
@@ -81,7 +100,6 @@ class TestNSRTSWrapper(unittest.TestCase):
         _ = fn_expression(**my_inputs)
 
         self.assertEqual(str, type(expression))
-        self.assertTrue(True)
                 
     def test_nsrts_multi(self):
 
@@ -114,7 +132,6 @@ class TestNSRTSWrapper(unittest.TestCase):
         _ = fn_expression(**my_inputs)
 
         self.assertEqual(str, type(expression))
-        self.assertTrue(True)
 
 
 
