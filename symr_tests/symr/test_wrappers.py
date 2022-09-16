@@ -81,6 +81,23 @@ class TestSymGPTWrapper(unittest.TestCase):
 
         self.assertEqual(str, type(expression))
 
+    def test_call_w_bfgs(self):
+
+        model = SymGPTWrapper(use_bfgs=True)
+
+        my_inputs = {"x1": np.arange(-1,1.0,0.01)}
+        y = np.array(my_inputs["x1"]**2)
+
+        expression = model(target=y, **my_inputs)
+
+        my_vars = ",".join([key for key in my_inputs.keys()])
+        sp_expression = sp.sympify(expression)
+        fn_expression = sp.lambdify(my_vars, expression)
+        
+        _ = fn_expression(**my_inputs)
+
+        self.assertEqual(str, type(expression))
+
 class TestNSRTSWrapper(unittest.TestCase):
 
     def setUp(self):

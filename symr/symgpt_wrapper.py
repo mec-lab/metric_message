@@ -46,7 +46,7 @@ class SymGPTWrapper(BaseWrapper):
 
     def clean_expression(self, expression):
 
-        cleaned_expression = "".join(expression).split(">")[0][1:].replace("s","x").replace("q","s").replace("***","**")
+        cleaned_expression = "".join(expression).split(">")[0][:].replace("s","x").replace("q","s").replace("***","**")
         cleaned_expression = cleaned_expression.replace("xin", "sin").replace("cox","cos")
 
         not_allowed = "+-*/"
@@ -103,15 +103,19 @@ class SymGPTWrapper(BaseWrapper):
 
         expression = self.clean_expression(pred_skeleton)
 
-        constants = [1.0 for i,x in enumerate(pred_skeleton) if x=='C'] # initialize coefficients as 1
+        constants = [1.0 for i,x in enumerate(expression) if x=='C'] # initialize coefficients as 1
 
         if self.use_bfgs:
-            optimized = minimize(lossFunc, constants, args=(pred_skeleton, x.numpy(), y.numpy()), method="BFGS") 
-
-        constants_placed = 0
+            my_x = x.squeeze().numpy()
+            my_y = y.squeeze().numpy()
+            my_x = my_x[:,None]
+            my_y = my_y[:,None]
+            optimized = minimize(lossFunc, constants, args=(expression, \
+                    my_x, my_y), method="BFGS")
+            constants_placed = 0
 
         pred_expression = ""
-
+        constants_placed = 0
 
         for my_char in expression:
 
