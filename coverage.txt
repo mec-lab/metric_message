@@ -4,7 +4,7 @@ symr/benchmark.py          73      0   100%
 symr/fake_sr.py            76      0   100%
 symr/helpers.py             5      0   100%
 symr/metrics.py            80      0   100%
-symr/nsrts_wrapper.py      51      6    88%   21, 32, 48-49, 56, 99
+symr/nsrts_wrapper.py      54      5    91%   21, 32, 51, 61, 104
 symr/wrappers.py           12      0   100%
 -----------------------------------------------------
-TOTAL                     297      6    98%
+TOTAL                     300      5    98%
