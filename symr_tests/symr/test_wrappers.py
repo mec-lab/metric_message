@@ -7,6 +7,8 @@ import sympy as sp
 
 from symr.wrappers import BaseWrapper
 from symr.nsrts_wrapper import NSRTSWrapper
+from symr.symgpt_wrapper import SymGPTWrapper
+
 
 
 class TestBaseWrapper(unittest.TestCase):
@@ -50,6 +52,15 @@ class TestBaseWrapper(unittest.TestCase):
         self.assertTrue(wrapper.initialize_model())
         self.assertTrue(wrapper())
         self.assertTrue(wrapper.load_parameters())
+
+class TestSymGPTWrapper(unittest.TestCase):
+    
+    def setUp(self):
+        pass
+
+    def test_instantiate(self):
+        
+        model = SymGPTWrapper() 
 
 class TestNSRTSWrapper(unittest.TestCase):
 
@@ -104,6 +115,7 @@ class TestNSRTSWrapper(unittest.TestCase):
 
         self.assertEqual(str, type(expression))
         self.assertTrue(True)
+
 
 
 if __name__ == "__main__": #pragma: no cover    
