@@ -26,7 +26,20 @@ This repository is designed for testing and comparing symbolic regression method
 * [arXiv:2106.06427](https://arxiv.org/abs/2106.06427)
 * Biggio, Luca, et al. "Neural symbolic regression that scales." International Conference on Machine Learning. PMLR, 2021. [link](https://proceedings.mlr.press/v139/biggio21a.html)
 
-**coming soon**
+Clone the repo and install
+
+```
+git clone git@github.com:SymposiumOrganization/NeuralSymbolicRegressionThatScales.git nsrts
+cd nsrts/src
+pip install -e .
+cd ../../
+```
+
+NSRTS depends one pytorch_lighting as well
+
+```
+pip install pytorch_lightning
+```
 
 #### SymbolicGPT - Valipour _et al._ 2021
 

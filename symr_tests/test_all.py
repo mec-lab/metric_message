@@ -18,6 +18,9 @@ from symr_tests.symr.test_fake_sr import TestPolySR,\
         TestRandomSR,\
         TestLossFunction 
 
+from symr_tests.symr.test_wrappers import TestBaseWrapper,\
+        TestNSRTSWrapper,\
+        TestSymGPTWrapper
 from symr_tests.symr.test_benchmark import TestEval,\
         TestBenchmark
 

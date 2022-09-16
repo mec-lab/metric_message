@@ -1,6 +1,4 @@
 import os
-import json 
-import time
 
 import numpy as np
 
@@ -35,7 +33,7 @@ class PolySR():
             self.use_bfgs = False
         
         self.degree = kwargs["degree"] if "degree" in kwargs.keys() else 5
-        self.setup_expression()
+        self.initialize_model()
         
     def setup_expression(self):
         
@@ -49,7 +47,18 @@ class PolySR():
         my_polynomial += "C"
         
         self.expression = my_polynomial
+
+    def initialize_model(self):
         
+        self.setup_expression()
+        
+    def load_parameters(self, filepath=None):
+        """
+        it doesn't matter if a filepath is provided, this is a fake SR method 
+        and has no parameters 
+        """
+        pass
+
     def optimize(self, target, **kwargs):
 
         c = [1.0 for elem in self.expression if elem=="C"]
