@@ -35,11 +35,16 @@ pip install -e .
 cd ../../
 ```
 
-NSRTS depends one pytorch_lighting as well
+NSRTS depends on pytorch_lighting as well
 
 ```
 pip install pytorch_lightning
 ```
+
+You can download trained weights for NSRTS by following the links from the [repo](https://github.com/SymposiumOrganization/NeuralSymb). These should be placed in a folder called weights in your nsrts directory. 
+
+* 100M [https://drive.google.com/file/d/1cNZq3dLnSUKEm-ujDl2mb2cCCorv7kOC/view?usp=sharing](https://drive.google.com/file/d/1cNZq3dLnSUKEm-ujDl2mb2cCCorv7kOC/view?usp=sharing)
+* 10M [https://drive.google.com/file/d/1cNZq3dLnSUKEm-ujDl2mb2cCCorv7kOC/view?usp=sharing](https://drive.google.com/file/d/1cNZq3dLnSUKEm-ujDl2mb2cCCorv7kOC/view?usp=sharing)
 
 #### SymbolicGPT - Valipour _et al._ 2021
 
