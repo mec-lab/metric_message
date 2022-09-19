@@ -122,7 +122,6 @@ def evaluate(**kwargs):
                         target=y_target, \
                         **my_inputs)
 
-
                 predicted_function = sp.lambdify(\
                         lambda_variables, \
                         expr=predicted_expression)
