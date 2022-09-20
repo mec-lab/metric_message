@@ -4,6 +4,8 @@ import numpy as np
 import sympy as sp
 
 from symr.fake_sr import RandomSR, PolySR, FourierSR
+from symr.nsrts_wrapper import NSRTSWrapper
+from symr.symgpt_wrapper import SymGPTWrapper
 
 from symr.metrics import compute_r2, compute_isclose_accuracy,\
         compute_r2_over_threshold, compute_relative_error,\
@@ -19,7 +21,9 @@ def evaluate(**kwargs):
     method_dict = {\
             "RandomSR": RandomSR,\
             "FourierSR": FourierSR,\
-            "PolySR":   PolySR\
+            "PolySR":   PolySR,\
+            "NSRTS":   NSRTSWrapper,\
+            "SymGPT":   SymGPTWrapper\
             }
     metric_dict = {\
             "r2": compute_r2,\
@@ -108,6 +112,9 @@ def evaluate(**kwargs):
                         
                 lambda_variables = ",".join(variables[expr_index][1:].split(" "))
 
+                # sp.lambdify does not currently recognize ln
+                # but default base for log is e, 
+                expression = expression.replace("ln","log")
                 target_function = sp.lambdify(\
                         lambda_variables, \
                         expr=expression)
@@ -117,7 +124,6 @@ def evaluate(**kwargs):
                 predicted_expression = model( \
                         target=y_target, \
                         **my_inputs)
-
 
                 predicted_function = sp.lambdify(\
                         lambda_variables, \
@@ -163,9 +169,11 @@ if __name__ == "__main__": #pragma: no cover
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-b", "--use_bfgs", type=int, defauilt=0,\
-            help="use BFGS for post-inference optimization")
 
+    parser.add_argument("-b", "--use_bfgs", type=int, default=1,\
+            help="use BFGS for post-inference optimization")
+    parser.add_argument("-k", "--k-folds", type=int, default=4, \
+            help="number of cross-validation splits to use")
     parser.add_argument("-m", "--metrics", type=str, nargs="+",\
         default=["exact", "tree_distance", "r2",\
             "r2_over_95", "r2_over_99", "r2_over_999",\
@@ -183,21 +191,17 @@ if __name__ == "__main__": #pragma: no cover
             "   isclose"\
             "default is to assess all metrics"
         )
-    parser.add_argument("-k", "--k-folds", type=int, default=4, \
-            help="number of cross-validation splits to use")
-    parser.add_argument("-s", "--sr-methods", type=str, nargs="+",\
-            default=["RandomSR"],\
-            help="which SR methods to benchmark. "
-                "Default is RandomSR, other options include: "\
-                " FourierSR, PolySR")
-    parser.add_argument("-t", "--trials", type=int, default=1,\
-            help="number of trials per expression during testing")
-
     parser.add_argument("-o", "--output_filename", type=str, default="results/temp.csv",\
             help="filename to save csv")
+    parser.add_argument("-s", "--sr-methods", type=str, nargs="+",\
+            default=["RandomSR"],\
+            help="which SR methods to benchmark. "\
+                "Default is RandomSR, other options include: "\
+                " FourierSR, PolySR, NSRTS, SymGPT")
+    parser.add_argument("-t", "--trials", type=int, default=1,\
+            help="number of trials per expression during testing")
     parser.add_argument("-w", "--write_csv", type=int, default=0,\
             help="1 - write csv, 2 - do not write csv, default 0")
-
     parser.add_argument("-z", "--sample-size", type=int, default=100, \
             help="number of samples per dataset")
 

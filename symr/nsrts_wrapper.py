@@ -35,6 +35,26 @@ class NSRTSWrapper(BaseWrapper):
         self.initialize_model()
         self.load_parameters()
 
+
+    def parse_filter(self, expression, variables=["x"]):
+        """
+        Sometimes cleaning the string isn't enough to yield an actual expression.
+
+        If the expression string is malformed, return f(x) = 0.0 instead
+        """
+        try: 
+            # SymGPT currently only handles one variable: x1
+            my_fn = sp.lambdify(variables, expr=expression)
+            my_inputs = {key:np.random.rand(3,1) for key in variables}
+            _ = my_fn(**my_inputs)
+
+            # return expression if it was successfuly parsed into a function 
+            return expression
+
+        except:
+            return "+".join([f"0.0 * {my_var}" \
+                    for my_var in variables])
+
     def __call__(self, target, **kwargs):
         
             
@@ -44,22 +64,30 @@ class NSRTSWrapper(BaseWrapper):
 
         for key in kwargs.keys():
             if x is None:
-                x = kwargs[key][:,None]
+                x = kwargs[key].reshape(-1,1)
             elif x.shape[-1] < 3:
                 my_x = kwargs[key]
                 if len(my_x.shape) == 2:
                     x = np.append(x, my_x, axis=-1) 
                 else:
                     x = np.append(x, my_x[:,None], axis=-1) 
-
-
         
         if self.use_bfgs:
             output = fitfunc(x, target.squeeze())
-            expression = output["best_bfgs_preds"][0]
+            try: 
+                expression = output["best_bfgs_preds"][0]
+            except:
+                expression = "+".join([f"0.0 * {my_var}" \
+                        for my_var in kwargs.keys()])
         else:
             assert False, "NSRTS requires BFGS"
 
+        for idx, key in enumerate(kwargs.keys()):
+            
+            expression = expression.replace(f"x_{idx+1}", key)
+
+        expression = self.parse_filter(expression, kwargs.keys())
+        
         return expression
 
     def initialize_model(self):
