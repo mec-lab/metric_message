@@ -68,8 +68,8 @@ class TestSymGPTWrapper(unittest.TestCase):
 
         model = SymGPTWrapper() 
 
-        my_inputs = {"x1": np.arange(-1,1.0,0.01)}
-        y = np.array(my_inputs["x1"]**2)
+        my_inputs = {"z": np.arange(-1,1.0,0.01)}
+        y = np.array(my_inputs["z"]**2)
 
         expression = model(target=y, **my_inputs)
 
@@ -85,8 +85,8 @@ class TestSymGPTWrapper(unittest.TestCase):
 
         model = SymGPTWrapper(use_bfgs=True)
 
-        my_inputs = {"x1": np.arange(-1,1.0,0.01)}
-        y = np.array(my_inputs["x1"]**2)
+        my_inputs = {"x2": np.arange(-1,1.0,0.01)}
+        y = np.array(my_inputs["x2"]**2)
 
         expression = model(target=y, **my_inputs)
 

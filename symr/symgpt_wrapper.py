@@ -150,7 +150,13 @@ class SymGPTWrapper(BaseWrapper):
             else:
                 pred_expression += my_char
 
-        return self.parse_filter(pred_expression)
+        expression = self.parse_filter(pred_expression)
+
+        for idx, key in enumerate(kwargs.keys()):
+            
+            expression = expression.replace(f"x", key)
+
+        return expression
 
     def initialize_model(self):
 
