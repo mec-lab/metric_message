@@ -48,6 +48,7 @@ class SymGPTWrapper(BaseWrapper):
 
         cleaned_expression = "".join(expression).split(">")[0][:].replace("s","x").replace("q","s").replace("***","**")
         cleaned_expression = cleaned_expression.replace("xin", "sin").replace("cox","cos")
+        cleaned_expression = cleaned_expression.replace("x1", "x")
 
         not_allowed = "+-*/"
 
@@ -59,12 +60,32 @@ class SymGPTWrapper(BaseWrapper):
         
         return cleaned_expression
 
+    def parse_filter(self, expression, variables=["x"]):
+        """
+        Sometimes cleaning the string isn't enough to yield an actual expression.
+
+        If the expression string is malformed, return f(x) = 0.0 instead
+        """
+
+        try: 
+            # SymGPT currently only handles one variable: x1
+            my_fn = sp.lambdify(variables, expr=expression)
+            my_inputs = {key:np.random.rand(3,1) for key in variables}
+            _ = my_fn(**my_inputs)
+
+            # return expression if it was successfuly parsed into a function 
+            return expression
+
+        except:
+            return "+".join([f"0.0 * {my_var}" \
+                    for my_var in variables])
+
     def __call__(self, target, **kwargs):
         
         if len(kwargs.keys()) > 1: 
             if self.verbose:
                 print("SymGPT not implemented for multiple input variables")
-            expression = " + ".join([key for key in kwargs.keys()])
+            expression = " + ".join([f"0.0 * {key}" for key in kwargs.keys()])
             return expression
 
         else:
@@ -128,9 +149,8 @@ class SymGPTWrapper(BaseWrapper):
                 constants_placed += 1
             else:
                 pred_expression += my_char
-            
-        return pred_expression
 
+        return self.parse_filter(pred_expression)
 
     def initialize_model(self):
 
