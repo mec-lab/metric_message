@@ -112,6 +112,9 @@ def evaluate(**kwargs):
                         
                 lambda_variables = ",".join(variables[expr_index][1:].split(" "))
 
+                # sp.lambdify does not currently recognize ln
+                # but default base for log is e, 
+                expression = expression.replace("ln","log")
                 target_function = sp.lambdify(\
                         lambda_variables, \
                         expr=expression)

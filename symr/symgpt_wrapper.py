@@ -70,7 +70,8 @@ class SymGPTWrapper(BaseWrapper):
         try: 
             # SymGPT currently only handles one variable: x1
             my_fn = sp.lambdify(variables, expr=expression)
-            _ = my_fn(np.random.rand(10))
+            my_inputs = {key:np.random.rand(3,1) for key in variables}
+            _ = my_fn(**my_inputs)
 
             # return expression if it was successfuly parsed into a function 
             return expression
