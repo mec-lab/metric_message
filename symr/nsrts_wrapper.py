@@ -272,13 +272,13 @@ class NSRTSWrapper(BaseWrapper):
             try: 
                 expression = output["best_bfgs_preds"][0]
             except:
-                return expression = "+".join([f"0.0 * {my_var}" \
+                return "+".join([f"0.0 * {my_var}" \
                         for my_var in kwargs.keys()]), {"failed": True}
         else:
             try: 
                 expression = self.no_bfgs_inference(x, target)
             except:
-                return expression = "+".join([f"0.0 * {my_var}" \
+                return "+".join([f"0.0 * {my_var}" \
                         for my_var in kwargs.keys()]), {"failed": True}
 
         for idx, key in enumerate(kwargs.keys()):
