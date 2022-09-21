@@ -87,7 +87,7 @@ class PolySR():
         if self.use_bfgs:
             my_expression, info = self.optimize(target=target, **kwargs)
         else:
-            my_expression, info = self.expression.replace("C", "1.0"), {failed: False}
+            my_expression, info = self.expression.replace("C", "1.0"), {"failed": False}
         # so far haven't encounted a failure mode for BFGS on polynomials
         
         return my_expression, info
