@@ -81,7 +81,7 @@ def evaluate(**kwargs):
     log_lines = []
     msg = "method, use_bfgs, expression, predicted, trial, r2, tree_distance, "\
             "exact, r2_cuttoff, r2_over_95, r2_over_99, r2_over_999, "\
-            "isclose\n"
+            "isclose, failed\n"
     log_lines.append(msg)
 
     # load benchmark with default filepath
@@ -127,9 +127,16 @@ def evaluate(**kwargs):
 
                 y_target = target_function(**my_inputs)
 
-                predicted_expression = model( \
+                predicted_expression, info = model( \
                         target=y_target, \
                         **my_inputs)
+
+                if "failed" in info.keys():
+                    failed = info["failed"]
+                else:
+                    failed = "n/a"
+
+
 
                 predicted_function = sp.lambdify(\
                         lambda_variables, \
@@ -155,9 +162,9 @@ def evaluate(**kwargs):
 
                 for metric, score in zip(metric_dict.keys(), scores):
 
-
                     msg += f", {score}"
 
+                msg += f", {failed}" 
                 msg += "\n"
 
     if write_csv:

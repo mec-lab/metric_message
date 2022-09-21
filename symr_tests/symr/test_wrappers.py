@@ -71,7 +71,7 @@ class TestSymGPTWrapper(unittest.TestCase):
         my_inputs = {"z": np.arange(-1,1.0,0.01)}
         y = np.array(my_inputs["z"]**2)
 
-        expression = model(target=y, **my_inputs)
+        expression, info = model(target=y, **my_inputs)
 
         my_vars = ",".join([key for key in my_inputs.keys()])
         sp_expression = sp.sympify(expression)
@@ -88,7 +88,7 @@ class TestSymGPTWrapper(unittest.TestCase):
         my_inputs = {"x2": np.arange(-1,1.0,0.01)}
         y = np.array(my_inputs["x2"]**2)
 
-        expression = model(target=y, **my_inputs)
+        expression, info = model(target=y, **my_inputs)
 
         my_vars = ",".join([key for key in my_inputs.keys()])
         sp_expression = sp.sympify(expression)
@@ -109,7 +109,7 @@ class TestNSRTSWrapper(unittest.TestCase):
         my_inputs = {"x_1": np.arange(0,1.0,0.1)}
         y = np.array(my_inputs["x_1"]**2)
 
-        expression = nsrts(target=y, **my_inputs)
+        expression, info = nsrts(target=y, **my_inputs)
 
         sp_expression = sp.sympify(expression)
         fn_expression = sp.lambdify("x_1", expression)
@@ -127,7 +127,7 @@ class TestNSRTSWrapper(unittest.TestCase):
                 }
         y = np.array(my_inputs["x_1"]**2+ np.sin(my_inputs["x_2"]) + my_inputs["x_3"])
 
-        expression = nsrts(target=y, **my_inputs)
+        expression, info = nsrts(target=y, **my_inputs)
 
         my_vars = ",".join([key for key in my_inputs.keys()])
         sp_expression = sp.sympify(expression)

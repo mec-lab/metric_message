@@ -25,8 +25,8 @@ class TestPolySR(unittest.TestCase):
         self.model = PolySR(degree=my_degrees) 
 
     def test_forward(self):
-        expression_a = self.model()
-        expression_b = self.model()
+        expression_a, info = self.model()
+        expression_b, info = self.model()
 
         self.assertEqual(expression_a, expression_b)
     
@@ -48,8 +48,8 @@ class TestFourierSR(unittest.TestCase):
 
     def test_forward(self):
 
-        expression_a = self.model()
-        expression_b = self.model()
+        expression_a, info = self.model()
+        expression_b, info = self.model()
         
         self.assertEqual(expression_a, expression_b)
 
@@ -65,8 +65,8 @@ class TestRandomSR(unittest.TestCase):
 
     def test_forward(self):
 
-        expression_a = self.model()
-        expression_b = self.model()
+        expression_a, info = self.model()
+        expression_b, info = self.model()
 
         self.assertNotEqual(expression_a, expression_b)
 

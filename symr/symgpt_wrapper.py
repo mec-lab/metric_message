@@ -66,7 +66,6 @@ class SymGPTWrapper(BaseWrapper):
 
         If the expression string is malformed, return f(x) = 0.0 instead
         """
-
         try: 
             # SymGPT currently only handles one variable: x1
             my_fn = sp.lambdify(variables, expr=expression)
@@ -74,11 +73,11 @@ class SymGPTWrapper(BaseWrapper):
             _ = my_fn(**my_inputs)
 
             # return expression if it was successfuly parsed into a function 
-            return expression
+            return expression, False
 
         except:
             return "+".join([f"0.0 * {my_var}" \
-                    for my_var in variables])
+                    for my_var in variables]), True
 
     def __call__(self, target, **kwargs):
         
@@ -86,7 +85,7 @@ class SymGPTWrapper(BaseWrapper):
             if self.verbose:
                 print("SymGPT not implemented for multiple input variables")
             expression = " + ".join([f"0.0 * {key}" for key in kwargs.keys()])
-            return expression
+            return expression, {"failed": True}
 
         else:
             my_key = [key for key in kwargs.keys()][0]
@@ -131,8 +130,14 @@ class SymGPTWrapper(BaseWrapper):
             my_y = y.squeeze().numpy()
             my_x = my_x[:,None]
             my_y = my_y[:,None]
-            optimized = minimize(lossFunc, constants, args=(expression, \
-                    my_x, my_y), method="BFGS")
+            try: 
+                optimized = minimize(lossFunc, constants, args=(expression, \
+                        my_x, my_y), method="BFGS")
+            except:
+                return "+".join([f"0.0 * {my_var}" \
+                        for my_var in kwargs.keys()]), {"failed": True}
+                
+
             constants_placed = 0
 
         pred_expression = ""
@@ -150,13 +155,14 @@ class SymGPTWrapper(BaseWrapper):
             else:
                 pred_expression += my_char
 
-        expression = self.parse_filter(pred_expression)
+        expression, failed = self.parse_filter(pred_expression)
+        info = {"failed": failed}
 
         for idx, key in enumerate(kwargs.keys()):
             
             expression = expression.replace(f"x", key)
 
-        return expression
+        return expression, info
 
     def initialize_model(self):
 

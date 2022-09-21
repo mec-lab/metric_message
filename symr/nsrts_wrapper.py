@@ -49,11 +49,11 @@ class NSRTSWrapper(BaseWrapper):
             _ = my_fn(**my_inputs)
 
             # return expression if it was successfuly parsed into a function 
-            return expression
+            return expression, False
 
         except:
             return "+".join([f"0.0 * {my_var}" \
-                    for my_var in variables])
+                    for my_var in variables]), True
 
     def __call__(self, target, **kwargs):
         
@@ -86,9 +86,11 @@ class NSRTSWrapper(BaseWrapper):
             
             expression = expression.replace(f"x_{idx+1}", key)
 
-        expression = self.parse_filter(expression, kwargs.keys())
+        expression, failed = self.parse_filter(expression, kwargs.keys())
+
+        info = {"failed": failed}
         
-        return expression
+        return expression, info
 
     def initialize_model(self):
 
