@@ -1,5 +1,7 @@
 import os
 
+import time
+
 import numpy as np
 
 from sympy import lambdify
@@ -84,11 +86,15 @@ class PolySR():
 
     def __call__(self, target=None, **kwargs):
         
+        t0 = time.time()
         if self.use_bfgs:
             my_expression, info = self.optimize(target=target, **kwargs)
         else:
             my_expression, info = self.expression.replace("C", "1.0"), {"failed": False}
         # so far haven't encounted a failure mode for BFGS on polynomials
+        t1 = time.time()
+
+        info["time_elapsed"] = t1-t0
         
         return my_expression, info
     

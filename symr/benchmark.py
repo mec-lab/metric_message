@@ -81,7 +81,7 @@ def evaluate(**kwargs):
     log_lines = []
     msg = "method, use_bfgs, expression, predicted, trial, r2, tree_distance, "\
             "exact, r2_cuttoff, r2_over_95, r2_over_99, r2_over_999, "\
-            "isclose, failed\n"
+            "isclose, failed, time_elapsed\n"
     log_lines.append(msg)
 
     # load benchmark with default filepath
@@ -136,6 +136,11 @@ def evaluate(**kwargs):
                 else:
                     failed = "n/a"
 
+                if "time_elapsed" in info.keys():
+                    time_elapsed = info["time_elapsed"]
+                else:
+                    time_elapsed = "n/a"
+
 
 
                 predicted_function = sp.lambdify(\
@@ -164,7 +169,8 @@ def evaluate(**kwargs):
 
                     msg += f", {score}"
 
-                msg += f", {failed}" 
+                msg += f", {failed}, {time_elapsed}" 
+                
                 msg += "\n"
 
     if write_csv:

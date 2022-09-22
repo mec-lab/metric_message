@@ -1,4 +1,5 @@
 import os
+import time
 
 import numpy as np
 import torch
@@ -81,11 +82,16 @@ class SymGPTWrapper(BaseWrapper):
 
     def __call__(self, target, **kwargs):
         
+        t0 = time.time()
+
         if len(kwargs.keys()) > 1: 
             if self.verbose:
                 print("SymGPT not implemented for multiple input variables")
             expression = " + ".join([f"0.0 * {key}" for key in kwargs.keys()])
-            return expression, {"failed": True}
+            info =  {"failed": True}
+            t1 = time.time()
+            info["time_elapsed"] = t1-t0
+            return expression, info
 
         else:
             my_key = [key for key in kwargs.keys()][0]
@@ -134,8 +140,12 @@ class SymGPTWrapper(BaseWrapper):
                 optimized = minimize(lossFunc, constants, args=(expression, \
                         my_x, my_y), method="BFGS")
             except:
-                return "+".join([f"0.0 * {my_var}" \
-                        for my_var in kwargs.keys()]), {"failed": True}
+                expression = "+".join([f"0.0 * {my_var}" \
+                        for my_var in kwargs.keys()])
+                t1 = time.time()
+                info["time_elapsed"] = t1-t0
+
+                return expression, info
                 
 
             constants_placed = 0
@@ -161,6 +171,9 @@ class SymGPTWrapper(BaseWrapper):
         for idx, key in enumerate(kwargs.keys()):
             
             expression = expression.replace(f"x", key)
+
+        t1 = time.time()
+        info["time_elapsed"] = t1-t0
 
         return expression, info
 
