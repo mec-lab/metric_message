@@ -37,7 +37,6 @@ def evaluate(**kwargs):
             "isclose": compute_isclose_accuracy\
             }
 
-
     if "use_bfgs" in kwargs.keys():
         use_bfgs = kwargs["use_bfgs"]
     else: 
@@ -86,7 +85,7 @@ def evaluate(**kwargs):
         
 
     log_lines = []
-    msg = "method, use_bfgs, expression, predicted, trial, tree_distance, exact,"\
+    msg = "method, use_bfgs, expression, predicted, trial, k_fold, tree_distance, exact,"\
             "in_r2, in_r2_cuttoff, in_r2_over_95, in_r2_over_99, in_r2_over_999, in_isclose,"\
             "ex_r2, ex_r2_cuttoff, ex_r2_over_95, ex_r2_over_99, ex_r2_over_999, ex_isclose,"\
             "failed, time_elapsed\n"
@@ -105,141 +104,142 @@ def evaluate(**kwargs):
     for method in sr_methods:
         for expr_index, expression in enumerate(expressions):
             for trial in range(trials):
+                for fold in range(k_folds):
 
-                if "random_seed" in kwargs.keys():
-                    np.random.seed(kwargs["random_seed"] * trial )
-                    torch.manual_seed(kwargs["random_seed"] * trial)
-                else:
-                    # safety fallback
-                    np.random.seed(trial)
-                    torch.manual_seed(trial)
-
-                # implement k-fold validation here, TODO
-
-                if "ex_proportion" in kwargs.keys():
-                    # proportion of range to use for validation (extrapolation)
-                    ex_proportion = kwargs["ex_proportion"]
-                    # proportion of range to use for examples
-                    in_proportion = 1.0 - ex_proportion
-                else:
-                    ex_proportion = 1 / (k_folds+1)
-                    in_proportion = 1.0 - ex_proportion
-
-                # example inputs
-                my_inputs = {}
-                # in-distribution validation inputs (interpolation)
-                id_val_inputs = {}
-                # ex-distribution validation inputs (extrapolation)
-                ed_val_inputs = {}
-
-
-                
-                for v_index, variable in \
-                        enumerate(variables[expr_index][1:].split(" ")):
-                    # generate random (uniform) samples for each variable
-                    # within support range
-                    
-                    low = float(\
-                            supports[expr_index][1:].split(" ")[v_index+0])
-                    high = float(\
-                            supports[expr_index][1:].split(" ")[v_index+1])
-
-                    support_range = high - low
-
-                    in_support_range = in_proportion * support_range
-                    id_low = low + np.random.rand() * (support_range - in_support_range)
-                    id_high = id_low + in_support_range
-
-                    ex_support_range_0 = id_low - low
-                    ex_support_range_1 = high - id_low
-                    sample_size_0 = int(ex_support_range_0 / \
-                            (ex_support_range_0+ex_support_range_1))
-                    sample_size_1 = sample_size-sample_size_0
-
-                    # example data, used for SR inference
-                    my_inputs[variable] = np.random.uniform(low=id_low, high=id_high,\
-                            size=(sample_size,1))
-
-                    # in-distribution evaluation data
-                    # different samples taken from the same range
-                    id_val_inputs[variable] = np.random.uniform(low=id_low, high=id_high,\
-                            size=(sample_size,1))
-                    
-                    # ex-distribution evaluation data
-                    # different samples taken from outside example range
-                    ed_val_0 = np.random.uniform(low=low, high=id_low,\
-                            size=(sample_size_0,1))
-                    ed_val_1 = np.random.uniform(low=id_high, high=high,\
-                            size=(sample_size_1,1))
-                    ed_val_inputs[variable] = np.append(ed_val_0, ed_val_1, \
-                            axis=0)
-
-                lambda_variables = ",".join(variables[expr_index][1:].split(" "))
-
-                # sp.lambdify does not currently recognize ln
-                # but default base for log is e, 
-                expression = expression.replace("ln","log")
-                target_function = sp.lambdify(\
-                        lambda_variables, \
-                        expr=expression)
-
-                id_y_target = target_function(**id_val_inputs)
-                ed_y_target = target_function(**ed_val_inputs)
-
-                model = method_dict[method](use_bfgs=use_bfgs, \
-                        input_variables=variables[expr_index])
-
-                predicted_expression, info = model( \
-                        target=id_y_target, \
-                        **my_inputs)
-
-                if "failed" in info.keys():
-                    failed = info["failed"]
-                else:
-                    failed = "n/a"
-
-                if "time_elapsed" in info.keys():
-                    time_elapsed = info["time_elapsed"]
-                else:
-                    time_elapsed = "n/a"
-
-                predicted_function = sp.lambdify(\
-                        lambda_variables, \
-                        expr=predicted_expression)
-
-                id_y_predicted = predicted_function(\
-                        **id_val_inputs)
-                ed_y_predicted = predicted_function(\
-                        **ed_val_inputs)
-
-                id_scores = []
-                ed_scores = []
-                for metric in metric_dict.keys():
-                    
-                    if metric in ["tree_distance", "exact"]:
-                        id_scores.append(metric_dict[metric](expression, predicted_expression))
+                    if "random_seed" in kwargs.keys():
+                        np.random.seed(kwargs["random_seed"] * trial )
+                        torch.manual_seed(kwargs["random_seed"] * trial)
                     else:
-                        if metric in metrics:
-                            metric_function = metric_dict[metric]
+                        # safety fallback
+                        np.random.seed(trial)
+                        torch.manual_seed(trial)
+
+                    # implement k-fold validation here, TODO
+
+                    if "ex_proportion" in kwargs.keys():
+                        # proportion of range to use for validation (extrapolation)
+                        ex_proportion = kwargs["ex_proportion"]
+                        # proportion of range to use for examples
+                        in_proportion = 1.0 - ex_proportion
+                    else:
+                        ex_proportion = 1 / (k_folds+1)
+                        in_proportion = 1.0 - ex_proportion
+
+                    # example inputs
+                    my_inputs = {}
+                    # in-distribution validation inputs (interpolation)
+                    id_val_inputs = {}
+                    # ex-distribution validation inputs (extrapolation)
+                    ed_val_inputs = {}
+
+
+                    
+                    for v_index, variable in \
+                            enumerate(variables[expr_index][1:].split(" ")):
+                        # generate random (uniform) samples for each variable
+                        # within support range
+                        
+                        low = float(\
+                                supports[expr_index][1:].split(" ")[v_index+0])
+                        high = float(\
+                                supports[expr_index][1:].split(" ")[v_index+1])
+
+                        support_range = high - low
+
+                        in_support_range = in_proportion * support_range
+                        id_low = low + np.random.rand() * (support_range - in_support_range)
+                        id_high = id_low + in_support_range
+
+                        ex_support_range_0 = id_low - low
+                        ex_support_range_1 = high - id_low
+                        sample_size_0 = int(ex_support_range_0 / \
+                                (ex_support_range_0+ex_support_range_1))
+                        sample_size_1 = sample_size-sample_size_0
+
+                        # example data, used for SR inference
+                        my_inputs[variable] = np.random.uniform(low=id_low, high=id_high,\
+                                size=(sample_size,1))
+
+                        # in-distribution evaluation data
+                        # different samples taken from the same range
+                        id_val_inputs[variable] = np.random.uniform(low=id_low, high=id_high,\
+                                size=(sample_size,1))
+                        
+                        # ex-distribution evaluation data
+                        # different samples taken from outside example range
+                        ed_val_0 = np.random.uniform(low=low, high=id_low,\
+                                size=(sample_size_0,1))
+                        ed_val_1 = np.random.uniform(low=id_high, high=high,\
+                                size=(sample_size_1,1))
+                        ed_val_inputs[variable] = np.append(ed_val_0, ed_val_1, \
+                                axis=0)
+
+                    lambda_variables = ",".join(variables[expr_index][1:].split(" "))
+
+                    # sp.lambdify does not currently recognize ln
+                    # but default base for log is e, 
+                    expression = expression.replace("ln","log")
+                    target_function = sp.lambdify(\
+                            lambda_variables, \
+                            expr=expression)
+
+                    id_y_target = target_function(**id_val_inputs)
+                    ed_y_target = target_function(**ed_val_inputs)
+
+                    model = method_dict[method](use_bfgs=use_bfgs, \
+                            input_variables=variables[expr_index])
+
+                    predicted_expression, info = model( \
+                            target=id_y_target, \
+                            **my_inputs)
+
+                    if "failed" in info.keys():
+                        failed = info["failed"]
+                    else:
+                        failed = "n/a"
+
+                    if "time_elapsed" in info.keys():
+                        time_elapsed = info["time_elapsed"]
+                    else:
+                        time_elapsed = "n/a"
+
+                    predicted_function = sp.lambdify(\
+                            lambda_variables, \
+                            expr=predicted_expression)
+
+                    id_y_predicted = predicted_function(\
+                            **id_val_inputs)
+                    ed_y_predicted = predicted_function(\
+                            **ed_val_inputs)
+
+                    id_scores = []
+                    ed_scores = []
+                    for metric in metric_dict.keys():
+                        
+                        if metric in ["tree_distance", "exact"]:
+                            id_scores.append(metric_dict[metric](expression, predicted_expression))
                         else:
-                            metric_function = lambda **kwargs: "None"
+                            if metric in metrics:
+                                metric_function = metric_dict[metric]
+                            else:
+                                metric_function = lambda **kwargs: "None"
 
-                        id_scores.append(metric_function(targets=id_y_target, predictions=id_y_predicted))
-                        ed_scores.append(metric_function(targets=ed_y_target, predictions=ed_y_predicted))
+                            id_scores.append(metric_function(targets=id_y_target, predictions=id_y_predicted))
+                            ed_scores.append(metric_function(targets=ed_y_target, predictions=ed_y_predicted))
 
-                msg += f"{method}, {use_bfgs}, {expression}, {predicted_expression}, {trial}"
+                    msg += f"{method}, {use_bfgs}, {expression}, {predicted_expression}, {trial}, {fold}"
 
-                for metric, score in zip(metric_dict.keys(), id_scores):
+                    for metric, score in zip(metric_dict.keys(), id_scores):
 
-                    msg += f", {score}"
+                        msg += f", {score}"
 
-                for metric, score in zip(list(metric_dict.keys())[2:], ed_scores):
+                    for metric, score in zip(list(metric_dict.keys())[2:], ed_scores):
 
-                    msg += f", {score}"
+                        msg += f", {score}"
 
-                msg += f", {failed}, {time_elapsed}" 
-                
-                msg += "\n"
+                    msg += f", {failed}, {time_elapsed}" 
+                    
+                    msg += "\n"
 
     if write_csv:
         with open(output_filename, "w") as f:
