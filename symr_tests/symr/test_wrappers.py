@@ -117,6 +117,21 @@ class TestNSRTSWrapper(unittest.TestCase):
         _ = fn_expression(**my_inputs)
 
         self.assertEqual(str, type(expression))
+
+    def test_call_without_bfgs(self):
+
+        nsrts = NSRTSWrapper(use_bfgs=False)
+        my_inputs = {"x_1": np.arange(0,1.0,0.1)}
+        y = np.array(my_inputs["x_1"]**2)
+
+        expression, info = nsrts(target=y, **my_inputs)
+
+        sp_expression = sp.sympify(expression)
+        fn_expression = sp.lambdify("x_1", expression)
+        
+        _ = fn_expression(**my_inputs)
+
+        self.assertEqual(str, type(expression))
                 
     def test_nsrts_multi(self):
 
