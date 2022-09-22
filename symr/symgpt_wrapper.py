@@ -112,7 +112,7 @@ class SymGPTWrapper(BaseWrapper):
         points = torch.cat([x, y], dim=1).float()
         
         variables = torch.tensor([1])
-        temperature = 0.01
+        temperature = 1.
         top_k = 0.0
         top_p = 0.7
         blockSize = 64

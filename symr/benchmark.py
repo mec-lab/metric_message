@@ -2,6 +2,7 @@ import argparse
 
 import numpy as np
 import sympy as sp
+import torch
 
 from symr.fake_sr import RandomSR, PolySR, FourierSR
 from symr.nsrts_wrapper import NSRTSWrapper
@@ -97,6 +98,10 @@ def evaluate(**kwargs):
     for method in sr_methods:
         for expr_index, expression in enumerate(expressions):
             for trial in range(trials):
+
+                np.random.seed(kwargs["random_seed"] * trial )
+                torch.manual_seed(kwargs["random_seed"] * trial)
+
                 # implement k-fold validation here, TODO
                 my_inputs = {}
                 model = method_dict[method](use_bfgs=use_bfgs, \
@@ -214,6 +219,8 @@ if __name__ == "__main__": #pragma: no cover
         )
     parser.add_argument("-o", "--output_filename", type=str, default="results/temp.csv",\
             help="filename to save csv")
+    parser.add_argument("-r", "--random_seed", type=int, default=42,\
+            help="seed for pseudorandom number generators, default 42")
     parser.add_argument("-s", "--sr-methods", type=str, nargs="+",\
             default=["RandomSR"],\
             help="which SR methods to benchmark. "\
