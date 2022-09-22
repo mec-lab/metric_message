@@ -72,14 +72,20 @@ def evaluate(**kwargs):
     else:
         sample_size = 20
 
+    if "input_dataset" in kwargs.keys():
+        input_dataset = kwargs["input_dataset"]
+    else:
+        input_dataset = None
+        
+
     log_lines = []
     msg = "method, use_bfgs, expression, predicted, trial, r2, tree_distance, "\
             "exact, r2_cuttoff, r2_over_95, r2_over_99, r2_over_999, "\
-            "isclose\n"
+            "isclose, failed\n"
     log_lines.append(msg)
 
     # load benchmark with default filepath
-    benchmark = load_benchmark()
+    benchmark = load_benchmark(input_dataset)
 
     expressions = [elem.split(",")[0] for elem in benchmark[1:]]
     supports = [elem.split(",")[1] for elem in benchmark[1:]]
@@ -121,9 +127,16 @@ def evaluate(**kwargs):
 
                 y_target = target_function(**my_inputs)
 
-                predicted_expression = model( \
+                predicted_expression, info = model( \
                         target=y_target, \
                         **my_inputs)
+
+                if "failed" in info.keys():
+                    failed = info["failed"]
+                else:
+                    failed = "n/a"
+
+
 
                 predicted_function = sp.lambdify(\
                         lambda_variables, \
@@ -149,9 +162,9 @@ def evaluate(**kwargs):
 
                 for metric, score in zip(metric_dict.keys(), scores):
 
-
                     msg += f", {score}"
 
+                msg += f", {failed}" 
                 msg += "\n"
 
     if write_csv:
@@ -172,6 +185,8 @@ if __name__ == "__main__": #pragma: no cover
 
     parser.add_argument("-b", "--use_bfgs", type=int, default=1,\
             help="use BFGS for post-inference optimization")
+    parser.add_argument("-i", "--input_dataset", type=str, default="data/nguyen.csv",\
+            help="benchmark csv")
     parser.add_argument("-k", "--k-folds", type=int, default=4, \
             help="number of cross-validation splits to use")
     parser.add_argument("-m", "--metrics", type=str, nargs="+",\
@@ -197,7 +212,7 @@ if __name__ == "__main__": #pragma: no cover
             default=["RandomSR"],\
             help="which SR methods to benchmark. "\
                 "Default is RandomSR, other options include: "\
-                " FourierSR, PolySR, NSRTS, SymGPT")
+                " FourierSR, PolySR, RandomSR, NSRTS, SymGPT")
     parser.add_argument("-t", "--trials", type=int, default=1,\
             help="number of trials per expression during testing")
     parser.add_argument("-w", "--write_csv", type=int, default=0,\

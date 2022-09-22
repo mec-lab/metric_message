@@ -65,7 +65,11 @@ class PolySR():
 
         loss_function = get_loss_function(self.expression, y_target=target, **kwargs)
 
-        optimized = minimize(loss_function, c, method="BFGS")
+        try: 
+            optimized = minimize(loss_function, c, method="BFGS")
+        except:
+            return "+".join([f"0.0 * {my_var}" \
+                    for my_var in kwargs.keys()]), {"failed": True}
 
         optimized_expression = ""
         constants_placed = 0
@@ -76,16 +80,17 @@ class PolySR():
             else:
                 optimized_expression += my_char
 
-        return optimized_expression 
+        return optimized_expression, {"failed": False}
 
     def __call__(self, target=None, **kwargs):
         
         if self.use_bfgs:
-            my_expression = self.optimize(target=target, **kwargs)
+            my_expression, info = self.optimize(target=target, **kwargs)
         else:
-            my_expression = self.expression.replace("C", "1.0")
+            my_expression, info = self.expression.replace("C", "1.0"), {"failed": False}
+        # so far haven't encounted a failure mode for BFGS on polynomials
         
-        return my_expression
+        return my_expression, info
     
 class FourierSR(PolySR):
     def __init__(self, **kwargs):
@@ -140,6 +145,6 @@ class RandomSR(PolySR):
         # sample a new expression each time.
         self.setup_expression()
 
-        my_expression = super().__call__(target=target, **kwargs)
+        my_expression, info = super().__call__(target=target, **kwargs)
 
-        return my_expression
+        return my_expression, info
