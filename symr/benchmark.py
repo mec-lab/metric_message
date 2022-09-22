@@ -152,6 +152,21 @@ def evaluate(**kwargs):
                     time_elapsed = "n/a"
 
 
+                # in-distribution evaluation data
+                # different samples taken from the same range
+                for v_index, variable in \
+                        enumerate(variables[expr_index][1:].split(" ")):
+                    
+                    low = float(\
+                            supports[expr_index][1:].split(" ")[v_index+0])
+                    high = float(\
+                            supports[expr_index][1:].split(" ")[v_index+1])
+                    my_stretch = high - low
+
+                    my_inputs[variable] = np.random.rand(sample_size,1)
+                    my_inputs[variable] = my_stretch \
+                            * my_inputs[variable] - low
+
 
                 predicted_function = sp.lambdify(\
                         lambda_variables, \
