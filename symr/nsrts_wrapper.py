@@ -1,5 +1,7 @@
 import os
 
+import time
+
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -253,6 +255,7 @@ class NSRTSWrapper(BaseWrapper):
 
     def __call__(self, target, **kwargs):
         
+        t0 = time.time()
         fitfunc = partial(self.model.fitfunc, cfg_params=self.params_fit)
 
         x = None
@@ -272,8 +275,15 @@ class NSRTSWrapper(BaseWrapper):
             try: 
                 expression = output["best_bfgs_preds"][0]
             except:
-                return "+".join([f"0.0 * {my_var}" \
-                        for my_var in kwargs.keys()]), {"failed": True}
+                
+                expression =  "+".join([f"0.0 * {my_var}" \
+                        for my_var in kwargs.keys()])
+                info = {"failed": True}
+                t1 = time.time()
+                info["time_elapsed"] = t1-t0
+
+                return expression, info
+
         else:
             try: 
                 expression = self.no_bfgs_inference(x, target)
@@ -288,6 +298,8 @@ class NSRTSWrapper(BaseWrapper):
         expression, failed = self.parse_filter(expression, kwargs.keys())
 
         info = {"failed": failed}
+        t1 = time.time()
+        info["time_elapsed"] = t1-t0
         
         return expression, info
 

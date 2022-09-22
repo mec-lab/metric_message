@@ -2,6 +2,7 @@ import argparse
 
 import numpy as np
 import sympy as sp
+import torch
 
 from symr.fake_sr import RandomSR, PolySR, FourierSR
 from symr.nsrts_wrapper import NSRTSWrapper
@@ -81,7 +82,7 @@ def evaluate(**kwargs):
     log_lines = []
     msg = "method, use_bfgs, expression, predicted, trial, r2, tree_distance, "\
             "exact, r2_cuttoff, r2_over_95, r2_over_99, r2_over_999, "\
-            "isclose, failed\n"
+            "isclose, failed, time_elapsed\n"
     log_lines.append(msg)
 
     # load benchmark with default filepath
@@ -97,6 +98,15 @@ def evaluate(**kwargs):
     for method in sr_methods:
         for expr_index, expression in enumerate(expressions):
             for trial in range(trials):
+
+                if "random_seed" in kwargs.keys():
+                    np.random.seed(kwargs["random_seed"] * trial )
+                    torch.manual_seed(kwargs["random_seed"] * trial)
+                else:
+                    # safety fallback
+                    np.random.seed(trial)
+                    torch.manual_seed(trial)
+
                 # implement k-fold validation here, TODO
                 my_inputs = {}
                 model = method_dict[method](use_bfgs=use_bfgs, \
@@ -136,6 +146,11 @@ def evaluate(**kwargs):
                 else:
                     failed = "n/a"
 
+                if "time_elapsed" in info.keys():
+                    time_elapsed = info["time_elapsed"]
+                else:
+                    time_elapsed = "n/a"
+
 
 
                 predicted_function = sp.lambdify(\
@@ -164,7 +179,8 @@ def evaluate(**kwargs):
 
                     msg += f", {score}"
 
-                msg += f", {failed}" 
+                msg += f", {failed}, {time_elapsed}" 
+                
                 msg += "\n"
 
     if write_csv:
@@ -208,6 +224,8 @@ if __name__ == "__main__": #pragma: no cover
         )
     parser.add_argument("-o", "--output_filename", type=str, default="results/temp.csv",\
             help="filename to save csv")
+    parser.add_argument("-r", "--random_seed", type=int, default=42,\
+            help="seed for pseudorandom number generators, default 42")
     parser.add_argument("-s", "--sr-methods", type=str, nargs="+",\
             default=["RandomSR"],\
             help="which SR methods to benchmark. "\
