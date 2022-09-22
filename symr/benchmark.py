@@ -27,9 +27,9 @@ def evaluate(**kwargs):
             "SymGPT":   SymGPTWrapper\
             }
     metric_dict = {\
-            "r2": compute_r2,\
             "tree_distance": compute_tree_distance,\
             "exact": compute_exact_equivalence,\
+            "r2": compute_r2,\
             "r2_cutoff": compute_r2_truncated,\
             "r2_over_95": get_r2_threshold_function(threshold=0.95),\
             "r2_over_99": get_r2_threshold_function(threshold=0.99),\
@@ -42,6 +42,16 @@ def evaluate(**kwargs):
         use_bfgs = kwargs["use_bfgs"]
     else: 
         use_bfgs = 0 
+
+    if "input_dataset" in kwargs.keys():
+        input_dataset = kwargs["input_dataset"]
+    else:
+        input_dataset = None
+
+    if "k_folds" in kwargs.keys():
+        k_folds = kwargs["k_folds"]
+    else:
+        k_folds = 1
 
     if "metrics" in kwargs.keys():
         metrics = kwargs["metrics"]
@@ -73,16 +83,13 @@ def evaluate(**kwargs):
     else:
         sample_size = 20
 
-    if "input_dataset" in kwargs.keys():
-        input_dataset = kwargs["input_dataset"]
-    else:
-        input_dataset = None
         
 
     log_lines = []
-    msg = "method, use_bfgs, expression, predicted, trial, r2, tree_distance, "\
-            "exact, r2_cuttoff, r2_over_95, r2_over_99, r2_over_999, "\
-            "isclose, failed, time_elapsed\n"
+    msg = "method, use_bfgs, expression, predicted, trial, tree_distance, exact,"\
+            "in_r2, in_r2_cuttoff, in_r2_over_95, in_r2_over_99, in_r2_over_999, in_isclose,"\
+            "ex_r2, ex_r2_cuttoff, ex_r2_over_95, ex_r2_over_99, ex_r2_over_999, ex_isclose,"\
+            "failed, time_elapsed\n"
     log_lines.append(msg)
 
     # load benchmark with default filepath
@@ -108,9 +115,21 @@ def evaluate(**kwargs):
                     torch.manual_seed(trial)
 
                 # implement k-fold validation here, TODO
+
+                # proportion of range to use for validation (extrapolation)
+                ed_proportion = 1 / (k_folds+1)
+                # proportion of range to use for examples
+                id_proportion = 1.0 - ed_proportion
+
+                # example inputs
                 my_inputs = {}
-                model = method_dict[method](use_bfgs=use_bfgs, \
-                        input_variables=variables[expr_index])
+                # in-distribution validation inputs (interpolation)
+                id_val_inputs = {}
+                # ex-distribution validation inputs (extrapolation)
+                ed_val_inputs = {}
+
+
+                
                 for v_index, variable in \
                         enumerate(variables[expr_index][1:].split(" ")):
                     # generate random (uniform) samples for each variable
@@ -120,11 +139,37 @@ def evaluate(**kwargs):
                             supports[expr_index][1:].split(" ")[v_index+0])
                     high = float(\
                             supports[expr_index][1:].split(" ")[v_index+1])
-                    my_stretch = high - low
 
-                    my_inputs[variable] = np.random.rand(sample_size,1)
-                    my_inputs[variable] = my_stretch \
-                            * my_inputs[variable] - low
+                    support_range = high - low
+
+                    id_support_range = ed_proportion * support_range
+                    id_low = low + np.random.rand() * (support_range - id_support_range)
+                    id_high = id_low + id_support_range
+
+                    ed_support_range_0 = id_low - low
+                    ed_support_range_1 = high - id_low
+                    sample_size_0 = int(ed_support_range_0 / \
+                            (ed_support_range_0+ed_support_range_1))
+                    sample_size_1 = sample_size-sample_size_0
+
+                    # example data, used for SR inference
+                    my_inputs[variable] = np.random.uniform(low=id_low, high=id_high,\
+                            size=(sample_size,1))
+
+                    # in-distribution evaluation data
+                    # different samples taken from the same range
+                    id_val_inputs[variable] = np.random.uniform(low=id_low, high=id_high,\
+                            size=(sample_size,1))
+                    
+                    # ex-distribution evaluation data
+                    # different samples taken from outside example range
+                    ed_val_0 = np.random.uniform(low=low, high=id_low,\
+                            size=(sample_size_0,1))
+                    ed_val_1 = np.random.uniform(low=id_high, high=high,\
+                            size=(sample_size_1,1))
+                    ed_val_inputs[variable] = np.append(ed_val_0, ed_val_1, \
+                            axis=0)
+
                         
                 lambda_variables = ",".join(variables[expr_index][1:].split(" "))
 
@@ -135,10 +180,14 @@ def evaluate(**kwargs):
                         lambda_variables, \
                         expr=expression)
 
-                y_target = target_function(**my_inputs)
+                id_y_target = target_function(**id_val_inputs)
+                ed_y_target = target_function(**ed_val_inputs)
+
+                model = method_dict[method](use_bfgs=use_bfgs, \
+                        input_variables=variables[expr_index])
 
                 predicted_expression, info = model( \
-                        target=y_target, \
+                        target=id_y_target, \
                         **my_inputs)
 
                 if "failed" in info.keys():
@@ -151,46 +200,37 @@ def evaluate(**kwargs):
                 else:
                     time_elapsed = "n/a"
 
-
-                # in-distribution evaluation data
-                # different samples taken from the same range
-                for v_index, variable in \
-                        enumerate(variables[expr_index][1:].split(" ")):
-                    
-                    low = float(\
-                            supports[expr_index][1:].split(" ")[v_index+0])
-                    high = float(\
-                            supports[expr_index][1:].split(" ")[v_index+1])
-                    my_stretch = high - low
-
-                    my_inputs[variable] = np.random.rand(sample_size,1)
-                    my_inputs[variable] = my_stretch \
-                            * my_inputs[variable] - low
-
-
                 predicted_function = sp.lambdify(\
                         lambda_variables, \
                         expr=predicted_expression)
 
-                y_predicted = predicted_function(\
-                        **my_inputs)
+                id_y_predicted = predicted_function(\
+                        **id_val_inputs)
+                ed_y_predicted = predicted_function(\
+                        **ed_val_inputs)
 
-                scores = []
+                id_scores = []
+                ed_scores = []
                 for metric in metric_dict.keys():
                     
                     if metric in ["tree_distance", "exact"]:
-                        scores.append(metric_dict[metric](expression, predicted_expression))
+                        id_scores.append(metric_dict[metric](expression, predicted_expression))
                     else:
                         if metric in metrics:
                             metric_function = metric_dict[metric]
                         else:
                             metric_function = lambda **kwargs: "None"
 
-                        scores.append(metric_function(targets=y_target, predictions=y_predicted))
+                        id_scores.append(metric_function(targets=id_y_target, predictions=id_y_predicted))
+                        ed_scores.append(metric_function(targets=ed_y_target, predictions=ed_y_predicted))
 
                 msg += f"{method}, {use_bfgs}, {expression}, {predicted_expression}, {trial}"
 
-                for metric, score in zip(metric_dict.keys(), scores):
+                for metric, score in zip(metric_dict.keys(), id_scores):
+
+                    msg += f", {score}"
+
+                for metric, score in zip(list(metric_dict.keys())[2:], ed_scores):
 
                     msg += f", {score}"
 
