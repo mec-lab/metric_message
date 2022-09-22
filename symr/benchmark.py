@@ -104,15 +104,15 @@ def evaluate(**kwargs):
     for method in sr_methods:
         for expr_index, expression in enumerate(expressions):
             for trial in range(trials):
+                if "random_seed" in kwargs.keys():
+                    np.random.seed(kwargs["random_seed"] * trial )
+                    torch.manual_seed(kwargs["random_seed"] * trial)
+                else:
+                    # safety fallback
+                    np.random.seed(trial)
+                    torch.manual_seed(trial)
                 for fold in range(k_folds):
 
-                    if "random_seed" in kwargs.keys():
-                        np.random.seed(kwargs["random_seed"] * trial )
-                        torch.manual_seed(kwargs["random_seed"] * trial)
-                    else:
-                        # safety fallback
-                        np.random.seed(trial)
-                        torch.manual_seed(trial)
 
                     # implement k-fold validation here, TODO
 
