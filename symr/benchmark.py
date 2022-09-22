@@ -116,10 +116,14 @@ def evaluate(**kwargs):
 
                 # implement k-fold validation here, TODO
 
-                # proportion of range to use for validation (extrapolation)
-                ed_proportion = 1 / (k_folds+1)
-                # proportion of range to use for examples
-                id_proportion = 1.0 - ed_proportion
+                if "ex_proportion" in kwargs.keys():
+                    # proportion of range to use for validation (extrapolation)
+                    ex_proportion = kwargs["ex_proportion"]
+                    # proportion of range to use for examples
+                    in_proportion = 1.0 - ex_proportion
+                else:
+                    ex_proportion = 1 / (k_folds+1)
+                    in_proportion = 1.0 - ex_proportion
 
                 # example inputs
                 my_inputs = {}
@@ -142,14 +146,14 @@ def evaluate(**kwargs):
 
                     support_range = high - low
 
-                    id_support_range = ed_proportion * support_range
-                    id_low = low + np.random.rand() * (support_range - id_support_range)
-                    id_high = id_low + id_support_range
+                    in_support_range = in_proportion * support_range
+                    id_low = low + np.random.rand() * (support_range - in_support_range)
+                    id_high = id_low + in_support_range
 
-                    ed_support_range_0 = id_low - low
-                    ed_support_range_1 = high - id_low
-                    sample_size_0 = int(ed_support_range_0 / \
-                            (ed_support_range_0+ed_support_range_1))
+                    ex_support_range_0 = id_low - low
+                    ex_support_range_1 = high - id_low
+                    sample_size_0 = int(ex_support_range_0 / \
+                            (ex_support_range_0+ex_support_range_1))
                     sample_size_1 = sample_size-sample_size_0
 
                     # example data, used for SR inference
@@ -170,7 +174,6 @@ def evaluate(**kwargs):
                     ed_val_inputs[variable] = np.append(ed_val_0, ed_val_1, \
                             axis=0)
 
-                        
                 lambda_variables = ",".join(variables[expr_index][1:].split(" "))
 
                 # sp.lambdify does not currently recognize ln
@@ -256,6 +259,8 @@ if __name__ == "__main__": #pragma: no cover
 
     parser.add_argument("-b", "--use_bfgs", type=int, default=1,\
             help="use BFGS for post-inference optimization")
+    parser.add_argument("-e", "--ex_proportion", type=float, default=0.5,\
+            help="proportion of support range to use for extrapolation")
     parser.add_argument("-i", "--input_dataset", type=str, default="data/nguyen.csv",\
             help="benchmark csv")
     parser.add_argument("-k", "--k-folds", type=int, default=4, \
