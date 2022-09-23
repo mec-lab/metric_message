@@ -58,7 +58,29 @@ You can download trained weights for NSRTS by following the links from the [repo
 * [https://github.com/vastlik/symformer/](https://github.com/vastlik/symformer/)
 * [arXiv:2205.15764](https://arxiv.org/abs/2205.15764)
 
-**coming soon**
+
+You can clone the repository from my fork, which includes any changes I have needed to make to get things to work locally. 
+
+```
+git clone git@github.com:riveSunder/symformer.git
+```
+
+Alternatively you can clone the original repo from [`vastlik`](
+https://github.com/vastlik/), which should include any updates 
+that are made later. 
+
+```
+git clone git@github.com:vastlik/symformer.git
+```
+
+Next, cd into the repo and (with your virtualenv activated) install the requirements from the provided text file.
+
+```
+cd symformer
+pip install -r requirements.txt 
+```
+
+
 
 #### End-to-End Symbolic Regression with Transformers - Kamienny _et al._ 2022 
 
