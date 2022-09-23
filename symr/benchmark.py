@@ -42,6 +42,11 @@ def evaluate(**kwargs):
     else: 
         use_bfgs = 0 
 
+    if "degree" in kwargs.keys():
+        degree = kwargs["degree"]
+    else:
+        degree = 10 
+
     if "input_dataset" in kwargs.keys():
         input_dataset = kwargs["input_dataset"]
     else:
@@ -187,7 +192,8 @@ def evaluate(**kwargs):
                     ed_y_target = target_function(**ed_val_inputs)
 
                     model = method_dict[method](use_bfgs=use_bfgs, \
-                            input_variables=variables[expr_index])
+                            input_variables=variables[expr_index], \
+                            degree=degree)
 
                     predicted_expression, info = model( \
                             target=id_y_target, \
@@ -259,6 +265,8 @@ if __name__ == "__main__": #pragma: no cover
 
     parser.add_argument("-b", "--use_bfgs", type=int, default=1,\
             help="use BFGS for post-inference optimization")
+    parser.add_argument("-d", "--degree", type=int, default=10,\
+            help="number of terms to use for fake sr methods PolySR, FourierSR, and RandomSR")
     parser.add_argument("-e", "--ex_proportion", type=float, default=0.5,\
             help="proportion of support range to use for extrapolation")
     parser.add_argument("-i", "--input_dataset", type=str, default="data/nguyen.csv",\
