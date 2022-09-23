@@ -23,6 +23,7 @@ class TestEval(unittest.TestCase):
         kwargs = {\
                 "sr_methods": "PolySR",\
                 "k_folds": 1,\
+                "ex_proportion": .1,\
                 "random_seed": 1,\
                 "trials": 1}
 
