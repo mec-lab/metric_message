@@ -188,6 +188,7 @@ def evaluate(**kwargs):
                             lambda_variables, \
                             expr=expression)
 
+                    y_target = target_function(**my_inputs)
                     id_y_target = target_function(**id_val_inputs)
                     ed_y_target = target_function(**ed_val_inputs)
 
@@ -196,7 +197,7 @@ def evaluate(**kwargs):
                             degree=degree)
 
                     predicted_expression, info = model( \
-                            target=id_y_target, \
+                            target=y_target, \
                             **my_inputs)
 
                     if "failed" in info.keys():
