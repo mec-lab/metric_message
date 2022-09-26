@@ -1,4 +1,5 @@
 import argparse
+import os
 
 import numpy as np
 import sympy as sp
@@ -79,6 +80,8 @@ def evaluate(**kwargs):
 
     if "output_filename" in kwargs.keys() and write_csv:
         output_filename = kwargs["output_filename"]
+        temp = os.path.splitext(output_filename)
+        partial_filename = temp[0] + "_partial" + temp[1]
     else:
         write_csv = 0 
 
@@ -94,6 +97,11 @@ def evaluate(**kwargs):
             "in_r2, in_r2_cuttoff, in_r2_over_95, in_r2_over_99, in_r2_over_999, in_isclose,"\
             "ex_r2, ex_r2_cuttoff, ex_r2_over_95, ex_r2_over_99, ex_r2_over_999, ex_isclose,"\
             "failed, time_elapsed\n"
+
+    if write_csv:
+        with open(partial_filename, "w") as f:
+            f.writelines(msg)
+
     log_lines.append(msg)
 
     # load benchmark with default filepath
@@ -221,6 +229,7 @@ def evaluate(**kwargs):
 
                     id_scores = []
                     ed_scores = []
+                    partial_msg = ""
                     for metric in metric_dict.keys():
                         
                         if metric in ["tree_distance", "exact"]:
@@ -234,19 +243,27 @@ def evaluate(**kwargs):
                             id_scores.append(metric_function(targets=id_y_target, predictions=id_y_predicted))
                             ed_scores.append(metric_function(targets=ed_y_target, predictions=ed_y_predicted))
 
-                    msg += f"{method}, {use_bfgs}, {expression}, {predicted_expression}, {trial}, {fold}"
+                    partial_msg += f"{method}, {use_bfgs}, {expression}, {predicted_expression}, {trial}, {fold}"
 
                     for metric, score in zip(metric_dict.keys(), id_scores):
 
-                        msg += f", {score}"
+                        partial_msg += f", {score}"
 
                     for metric, score in zip(list(metric_dict.keys())[2:], ed_scores):
 
-                        msg += f", {score}"
+                        partial_msg += f", {score}"
 
-                    msg += f", {failed}, {time_elapsed}" 
+                    partial_msg += f", {failed}, {time_elapsed}" 
                     
-                    msg += "\n"
+                    partial_msg += "\n"
+
+                    if write_csv:
+                        with open(partial_filename, "a") as f:
+                            f.writelines(partial_msg)
+                    else: 
+                        print(partial_msg)
+
+                msg += partial_msg
 
     if write_csv:
         with open(output_filename, "w") as f:
