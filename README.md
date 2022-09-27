@@ -10,6 +10,8 @@ cd metric_massage
 virtualenv symr --python=python3.8
 source symr/bin/activate
 
+pip install -e .
+
 # try and run yuca tests
 python -m symr_tests.test_all
 ```
@@ -51,7 +53,6 @@ You can download trained weights for NSRTS by following the links from the [repo
 * [https://github.com/mojivalipour/symbolicgpt](https://github.com/mojivalipour/symbolicgpt)
 * [arXiv:2106.14131](https://arxiv.org/abs/2106.14131)
 
-**coming soon**
 
 #### Symformer - Vastl _et al._ 2022
 
@@ -78,8 +79,12 @@ Next, cd into the repo and (with your virtualenv activated) install the requirem
 ```
 cd symformer
 pip install -r requirements.txt 
-```
 
+My fork of the symformer repo includes a `setup.py`, so you can install it in editable mode. This helps with non-local imports in the main repo. 
+
+```
+pip install -e .
+```
 
 
 #### End-to-End Symbolic Regression with Transformers - Kamienny _et al._ 2022 
