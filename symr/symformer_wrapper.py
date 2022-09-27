@@ -3,11 +3,12 @@ import os
 import time
 
 import numpy as np
-import torch
-import torch.nn.functional as F
 
 from sympy import lambdify
 import sympy as sp
+
+import tensorflow as tf
+from symformer.model.runner import Runner
 
 from symr.wrappers import BaseWrapper
 
@@ -17,14 +18,22 @@ class SymformerWrapper(BaseWrapper):
 
         if "use_bfgs" in kwargs.keys():
             self.use_bfgs = kwargs["use_bfgs"]
+            self.optimization_type = "bfgs_init"
         else:
             self.use_bfgs = False
+            self.optimization_type = "no_opt"
 
-        self.my_device = torch.device("cpu")
-        self.my_beam_width = kwargs["beam_width"] \
+        if "model_name" in kwargs.keys():
+            self.model_name = kwargs["model_name"]
+        else:
+            self.model_name = "symformer-univariate" 
+
+        self.my_device = "cpu"
+        self.beam_width = kwargs["beam_width"] \
                 if "beam_width" in kwargs.keys() else 4
+
+    
         self.initialize_model()
-        self.load_parameters()
 
     def parse_filter(self, expression, variables=["x"]):
         """
@@ -50,19 +59,45 @@ class SymformerWrapper(BaseWrapper):
         t0 = time.time()
 
         # symformer call goes here
-        info = {"failed": True}
+        try:
+            x = kwargs[list(kwargs.keys())[0]].reshape(-1,1)
+            if "bivariate" in self.model_name:
+                x = np.append(x, \
+                        kwargs[list(kwargs.keys())[1]],\
+                        axis=-1)
+            points = np.append(x, \
+                    target.reshape(-1,1), axis=-1)
+            points = tf.convert_to_tensor(points[None,:,:])
+
+            result = self.runner.predict(\
+                    equation="x", points=points)
+            expression = result[0]
+
+            info = {"failed": False}
+        except:
+            expression = "+".join([f"0.0 * {my_var}" \
+                    for my_var in kwargs.keys()])
+
+            info = {"failed": True}
+            t1 = time.time()
+            info["time_elapsed"] = t1-t0
+
+            return expression, info
 
         t1 = time.time()
 
         info["time_elapsed"] = t1-t0
-
-
-        expression = "+".join([f"0.0 * {my_var}" \
-                for my_var in kwargs.keys()])
         
         return expression, info
 
     def initialize_model(self):
-        pass
-    def load_parameters(self):
-        pass 
+
+        self.load_parameters(self.model_name)
+
+    def load_parameters(self, model_name):
+
+        self.runner = Runner.from_checkpoint(\
+                self.model_name, \
+                num_equations=self.beam_width,\
+                optimization_type=self.optimization_type)
+
