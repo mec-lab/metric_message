@@ -53,6 +53,13 @@ You can download trained weights for NSRTS by following the links from the [repo
 * [https://github.com/mojivalipour/symbolicgpt](https://github.com/mojivalipour/symbolicgpt)
 * [arXiv:2106.14131](https://arxiv.org/abs/2106.14131)
 
+Clone the repo. I recommend cloning my fork:
+
+```
+git clone git@github.com:riveSunder/symbolicgpt.git symgpt
+```
+
+
 
 #### Symformer - Vastl _et al._ 2022
 
@@ -63,7 +70,7 @@ You can download trained weights for NSRTS by following the links from the [repo
 You can clone the repository from my fork, which includes any changes I have needed to make to get things to work locally. 
 
 ```
-git clone git@github.com:riveSunder/symformer.git
+git clone git@github.com:riveSunder/symformer.git symf
 ```
 
 Alternatively you can clone the original repo from [`vastlik`](
@@ -71,13 +78,13 @@ https://github.com/vastlik/), which should include any updates
 that are made later. 
 
 ```
-git clone git@github.com:vastlik/symformer.git
+git clone git@github.com:vastlik/symformer.git symf
 ```
 
 Next, cd into the repo and (with your virtualenv activated) install the requirements from the provided text file.
 
 ```
-cd symformer
+cd symf
 pip install -r requirements.txt 
 
 My fork of the symformer repo includes a `setup.py`, so you can install it in editable mode. This helps with non-local imports in the main repo. 
