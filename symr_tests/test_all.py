@@ -27,5 +27,6 @@ from symr_tests.symr.test_benchmark import TestEval,\
         TestBenchmark
 
 if __name__ == "__main__": #pragma: no cover    
+    np.random.seed(42)
 
     unittest.main(verbosity=2)

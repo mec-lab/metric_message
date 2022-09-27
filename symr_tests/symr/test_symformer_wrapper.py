@@ -21,7 +21,7 @@ class TestSymformerWrapper(unittest.TestCase):
 
         model = SymformerWrapper(use_bfgs=True)
 
-        my_inputs = {"x_1": np.arange(-1.0,1.0,0.035)}
+        my_inputs = {"x_1": np.arange(-1.0,1.0,0.025)}
         y = np.array(my_inputs["x_1"]**2)
 
         expression, info = model(target=y, **my_inputs)
@@ -36,7 +36,7 @@ class TestSymformerWrapper(unittest.TestCase):
     def test_call_without_bfgs(self):
 
         model = SymformerWrapper(use_bfgs=False)
-        my_inputs = {"x_1": np.arange(-1.0,1.0,0.035)}
+        my_inputs = {"x_1": np.arange(-1.0,1.0,0.025)}
         y = np.array(my_inputs["x_1"]**2)
 
         expression, info = model(target=y, **my_inputs)

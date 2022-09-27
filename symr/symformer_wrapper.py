@@ -35,24 +35,6 @@ class SymformerWrapper(BaseWrapper):
     
         self.initialize_model()
 
-    def parse_filter(self, expression, variables=["x"]):
-        """
-        Sometimes cleaning the string isn't enough to yield an actual expression.
-
-        If the expression string is malformed, return f(x) = 0.0 instead
-        """
-        try: 
-            # SymGPT currently only handles one variable: x1
-            my_fn = sp.lambdify(variables, expr=expression)
-            my_inputs = {key:np.random.rand(3,1) for key in variables}
-            _ = my_fn(**my_inputs)
-
-            # return expression if it was successfuly parsed into a function 
-            return expression, False
-
-        except:
-            return "+".join([f"0.0 * {my_var}" \
-                    for my_var in variables]), True
 
     def __call__(self, target, **kwargs):
         
@@ -91,7 +73,10 @@ class SymformerWrapper(BaseWrapper):
         for idx, key in enumerate(kwargs.keys()):
             if idx > 1:
                 break
+            expression = expression.replace("exp", "@@@")
             expression = expression.replace(f"{my_vars[idx]}", key)
+            expression = expression.replace("@@@", "exp")
+
 
         t1 = time.time()
 
