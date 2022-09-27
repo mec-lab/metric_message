@@ -63,14 +63,17 @@ class SymformerWrapper(BaseWrapper):
             x = kwargs[list(kwargs.keys())[0]].reshape(-1,1)
             if "bivariate" in self.model_name:
                 x = np.append(x, \
-                        kwargs[list(kwargs.keys())[1]],\
+                        kwargs[list(kwargs.keys())[1]].reshape(-1,1),\
                         axis=-1)
+
             points = np.append(x, \
                     target.reshape(-1,1), axis=-1)
+
             points = tf.convert_to_tensor(points[None,:,:])
 
             result = self.runner.predict(\
                     equation="x", points=points)
+
             expression = result[0]
 
             info = {"failed": False}
@@ -83,6 +86,12 @@ class SymformerWrapper(BaseWrapper):
             info["time_elapsed"] = t1-t0
 
             return expression, info
+
+        my_vars = ["x", "y"]
+        for idx, key in enumerate(kwargs.keys()):
+            if idx > 1:
+                break
+            expression = expression.replace(f"{my_vars[idx]}", key)
 
         t1 = time.time()
 
