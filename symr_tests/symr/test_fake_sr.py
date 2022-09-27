@@ -37,6 +37,14 @@ class TestPolySR(unittest.TestCase):
 
         self.assertTrue(True)
 
+    def test_degree(self):
+
+        for degree in [3,6,9]:
+            model = PolySR(degree=degree) 
+            self.assertEqual(degree, model.degree)
+
+
+
 class TestFourierSR(unittest.TestCase):
 
     def setUp(self):
@@ -52,6 +60,12 @@ class TestFourierSR(unittest.TestCase):
         expression_b, info = self.model()
         
         self.assertEqual(expression_a, expression_b)
+
+    def test_degree(self):
+
+        for degree in [3,6,9]:
+            model = PolySR(degree=degree) 
+            self.assertEqual(degree, model.degree)
 
 class TestRandomSR(unittest.TestCase):
 
@@ -69,6 +83,12 @@ class TestRandomSR(unittest.TestCase):
         expression_b, info = self.model()
 
         self.assertNotEqual(expression_a, expression_b)
+
+    def test_degree(self):
+
+        for degree in [3,6,9]:
+            model = PolySR(degree=degree) 
+            self.assertEqual(degree, model.degree)
 
 class TestLossFunction(unittest.TestCase):
 

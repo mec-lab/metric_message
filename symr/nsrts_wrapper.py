@@ -40,7 +40,7 @@ class NSRTSWrapper(BaseWrapper):
 
         self.my_device = torch.device("cpu")
         self.my_beam_width = kwargs["beam_width"] \
-                if "beam_width" in kwargs.keys() else 4
+                if "beam_width" in kwargs.keys() else 1
         self.initialize_model()
         self.load_parameters()
 
