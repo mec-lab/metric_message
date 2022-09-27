@@ -8,6 +8,7 @@ import torch
 from symr.fake_sr import RandomSR, PolySR, FourierSR
 from symr.nsrts_wrapper import NSRTSWrapper
 from symr.symgpt_wrapper import SymGPTWrapper
+from symr.symformer_wrapper import SymformerWrapper
 
 from symr.metrics import compute_r2, compute_isclose_accuracy,\
         compute_r2_over_threshold, compute_relative_error,\
@@ -25,7 +26,8 @@ def evaluate(**kwargs):
             "FourierSR": FourierSR,\
             "PolySR":   PolySR,\
             "NSRTS":   NSRTSWrapper,\
-            "SymGPT":   SymGPTWrapper\
+            "SymGPT":   SymGPTWrapper,\
+            "Symformer":   SymformerWrapper\
             }
     metric_dict = {\
             "tree_distance": compute_tree_distance,\
