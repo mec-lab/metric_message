@@ -86,6 +86,7 @@ Next, cd into the repo and (with your virtualenv activated) install the requirem
 ```
 cd symf
 pip install -r requirements.txt 
+```
 
 My fork of the symformer repo includes a `setup.py`, so you can install it in editable mode. This helps with non-local imports in the main repo. 
 
