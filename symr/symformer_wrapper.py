@@ -39,7 +39,7 @@ class SymformerWrapper(BaseWrapper):
         """
         Sometimes cleaning the string isn't enough to yield an actual expression.
 
-        If the expression string is malformed, return f(x) = 0.0 instead
+        If the expression string is malformed, return f(x) = 1.0 instead
         """
         try: 
             # SymGPT currently only handles one variable: x1
@@ -51,7 +51,7 @@ class SymformerWrapper(BaseWrapper):
             return expression, False
 
         except:
-            return "+".join([f"0.0 * {my_var}" \
+            return "+".join([f"1.0 * {my_var}" \
                     for my_var in variables]), True
 
 
@@ -79,7 +79,7 @@ class SymformerWrapper(BaseWrapper):
 
             info = {"failed": False}
         except:
-            expression = "+".join([f"0.0 * {my_var}" \
+            expression = "+".join([f"1.0 * {my_var}" \
                     for my_var in kwargs.keys()])
 
             info = {"failed": True}
