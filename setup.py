@@ -13,7 +13,7 @@ setup(\
                         "matplotlib==3.3.4",\
                         "scipy==1.5",\
                         "apted==1.0.3",\
-                        "coverage==6.4.4",\
+                        "coverage==5.4",\
                         "scikit-learn==1.1.2",\
                         "sympy==1.10.1"]
     )
