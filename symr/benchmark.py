@@ -1,4 +1,6 @@
 import argparse
+import subprocess
+import sys
 import os
 
 import numpy as np
@@ -98,7 +100,13 @@ def evaluate(**kwargs):
     msg = "method, use_bfgs, expression, predicted, trial, k_fold, tree_distance, exact,"\
             "in_r2, in_r2_cuttoff, in_r2_over_95, in_r2_over_99, in_r2_over_999, in_isclose,"\
             "ex_r2, ex_r2_cuttoff, ex_r2_over_95, ex_r2_over_99, ex_r2_over_999, ex_isclose,"\
-            "failed, time_elapsed\n"
+            "failed, time_elapsed, git_hash, entry_point\n"
+
+    msg += "meta "
+    msg += " , " * (msg.count(",")-2) 
+    msg += ", " + kwargs["git_hash"] if "git_hash" in kwargs.keys() else "none"
+    msg += ", " + kwargs["entry_point"] if "entry_point" in kwargs.keys() else "none"
+    msg += "\n"
 
     if write_csv:
         with open(partial_filename, "w") as f:
@@ -117,15 +125,15 @@ def evaluate(**kwargs):
         sr_methods = [sr_methods]
 
     for method in sr_methods:
-        for expr_index, expression in enumerate(expressions):
-            for trial in range(trials):
-                if "random_seed" in kwargs.keys():
-                    np.random.seed(kwargs["random_seed"] * trial )
-                    torch.manual_seed(kwargs["random_seed"] * trial)
-                else:
-                    # safety fallback
-                    np.random.seed(trial)
-                    torch.manual_seed(trial)
+        for trial in range(trials):
+            if "random_seed" in kwargs.keys():
+                np.random.seed(kwargs["random_seed"] * trial )
+                torch.manual_seed(kwargs["random_seed"] * trial)
+            else:
+                # safety fallback
+                np.random.seed(trial)
+                torch.manual_seed(trial)
+            for expr_index, expression in enumerate(expressions):
                 for fold in range(k_folds):
 
 
@@ -330,6 +338,30 @@ if __name__ == "__main__": #pragma: no cover
 
     kwargs = dict(args._get_kwargs())
 
+    # use subprocess to get the current git hash, store
+    hash_command = ["git", "rev-parse", "--verify", "HEAD"]
+    git_hash = subprocess.check_output(hash_command)
 
+    # store the command-line call for this experiment
+    entry_point = []
+    entry_point.append(os.path.split(sys.argv[0])[1])
+    args_list = sys.argv[1:]
+
+    sorted_args = []
+    for aa in range(0, len(args_list)):
+
+        if "-" in args_list[aa]:
+            sorted_args.append([args_list[aa]])
+        else: 
+            sorted_args[-1].append(args_list[aa])
+
+    sorted_args.sort()
+    entry_point = "python -m symr.benchmark "
+
+    for elem in sorted_args:
+        entry_point += " " + " ".join(elem)
+
+    kwargs["entry_point"] = entry_point 
+    kwargs["git_hash"] = git_hash.decode("utf8")[:-1]
     
     evaluate(**kwargs)
