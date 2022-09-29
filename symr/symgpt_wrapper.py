@@ -65,7 +65,7 @@ class SymGPTWrapper(BaseWrapper):
         """
         Sometimes cleaning the string isn't enough to yield an actual expression.
 
-        If the expression string is malformed, return f(x) = 0.0 instead
+        If the expression string is malformed, return f(x) = 1.0*x instead
         """
         try: 
             # SymGPT currently only handles one variable: x1
@@ -77,7 +77,7 @@ class SymGPTWrapper(BaseWrapper):
             return expression, False
 
         except:
-            return "+".join([f"0.0 * {my_var}" \
+            return "+".join([f"1.0 * {my_var}" \
                     for my_var in variables]), True
 
     def __call__(self, target, **kwargs):
@@ -87,7 +87,7 @@ class SymGPTWrapper(BaseWrapper):
         if len(kwargs.keys()) > 1: 
             if self.verbose:
                 print("SymGPT not implemented for multiple input variables")
-            expression = " + ".join([f"0.0 * {key}" for key in kwargs.keys()])
+            expression = " + ".join([f"1.0 * {key}" for key in kwargs.keys()])
             info =  {"failed": True}
             t1 = time.time()
             info["time_elapsed"] = t1-t0
@@ -140,7 +140,7 @@ class SymGPTWrapper(BaseWrapper):
                 optimized = minimize(lossFunc, constants, args=(expression, \
                         my_x, my_y), method="BFGS")
             except:
-                expression = "+".join([f"0.0 * {my_var}" \
+                expression = "+".join([f"1.0 * {my_var}" \
                         for my_var in kwargs.keys()])
                 t1 = time.time()
                 info["time_elapsed"] = t1-t0
