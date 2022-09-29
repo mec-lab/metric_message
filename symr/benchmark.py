@@ -102,6 +102,7 @@ def evaluate(**kwargs):
             "ex_r2, ex_r2_cuttoff, ex_r2_over_95, ex_r2_over_99, ex_r2_over_999, ex_isclose,"\
             "failed, time_elapsed, git_hash, entry_point\n"
 
+    msg += "meta "
     msg += " , " * (msg.count(",")-2) 
     msg += ", " + kwargs["git_hash"] if "git_hash" in kwargs.keys() else "none"
     msg += ", " + kwargs["entry_point"] if "entry_point" in kwargs.keys() else "none"
