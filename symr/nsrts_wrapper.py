@@ -49,7 +49,7 @@ class NSRTSWrapper(BaseWrapper):
         """
         Sometimes cleaning the string isn't enough to yield an actual expression.
 
-        If the expression string is malformed, return f(x) = 0.0 instead
+        If the expression string is malformed, return f(x) = 1.0*x instead
         """
         try: 
             # SymGPT currently only handles one variable: x1
@@ -61,7 +61,7 @@ class NSRTSWrapper(BaseWrapper):
             return expression, False
 
         except:
-            return "+".join([f"0.0 * {my_var}" \
+            return "+".join([f"1.0 * {my_var}" \
                     for my_var in variables]), True
 
     def no_bfgs_inference(self, x, target):
@@ -276,7 +276,7 @@ class NSRTSWrapper(BaseWrapper):
                 expression = output["best_bfgs_preds"][0]
             except:
                 
-                expression =  "+".join([f"0.0 * {my_var}" \
+                expression =  "+".join([f"1.0 * {my_var}" \
                         for my_var in kwargs.keys()])
                 info = {"failed": True}
                 t1 = time.time()
@@ -288,7 +288,7 @@ class NSRTSWrapper(BaseWrapper):
             try: 
                 expression = self.no_bfgs_inference(x, target)
             except:
-                return "+".join([f"0.0 * {my_var}" \
+                return "+".join([f"1.0 * {my_var}" \
                         for my_var in kwargs.keys()]), {"failed": True}
 
         for idx, key in enumerate(kwargs.keys()):
