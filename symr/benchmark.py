@@ -273,7 +273,7 @@ def evaluate(**kwargs):
                     else: 
                         print(partial_msg)
 
-                msg += partial_msg
+                    msg += partial_msg
 
     if write_csv:
         with open(output_filename, "w") as f:
