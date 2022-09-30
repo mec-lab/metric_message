@@ -143,7 +143,9 @@ class SymGPTWrapper(BaseWrapper):
                 expression = "+".join([f"1.0 * {my_var}" \
                         for my_var in kwargs.keys()])
                 t1 = time.time()
+                info = {}
                 info["time_elapsed"] = t1-t0
+                info["failed"] = True
 
                 return expression, info
                 
