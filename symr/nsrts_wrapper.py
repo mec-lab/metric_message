@@ -271,8 +271,8 @@ class NSRTSWrapper(BaseWrapper):
                     x = np.append(x, my_x[:,None], axis=-1) 
         
         if self.use_bfgs:
-            output = fitfunc(x, target.squeeze())
             try: 
+                output = fitfunc(x, target.squeeze())
                 expression = output["best_bfgs_preds"][0]
             except:
                 
