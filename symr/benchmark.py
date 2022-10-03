@@ -11,10 +11,12 @@ from symr.fake_sr import RandomSR, PolySR, FourierSR
 from symr.nsrts_wrapper import NSRTSWrapper
 from symr.symgpt_wrapper import SymGPTWrapper
 from symr.symformer_wrapper import SymformerWrapper
+from symr.pysr_wrapper import PySRWrapper
 
 from symr.metrics import compute_r2, compute_isclose_accuracy,\
         compute_r2_over_threshold, compute_relative_error,\
         compute_r2_truncated, compute_tree_distance,\
+        compute_relative_error, compute_relative_squared_error,\
         compute_exact_equivalence, get_r2_threshold_function
 
 from symr.helpers import load_benchmark
@@ -27,6 +29,7 @@ def evaluate(**kwargs):
             "RandomSR": RandomSR,\
             "FourierSR": FourierSR,\
             "PolySR":   PolySR,\
+            "PySR":   PySRWrapper,\
             "NSRTS":   NSRTSWrapper,\
             "SymGPT":   SymGPTWrapper,\
             "Symformer":   SymformerWrapper\
@@ -34,6 +37,8 @@ def evaluate(**kwargs):
     metric_dict = {\
             "tree_distance": compute_tree_distance,\
             "exact": compute_exact_equivalence,\
+            "nmae": compute_relative_error,\
+            "nmse": compute_relative_squared_error,\
             "r2": compute_r2,\
             "r2_cutoff": compute_r2_truncated,\
             "r2_over_95": get_r2_threshold_function(threshold=0.95),\
@@ -98,7 +103,9 @@ def evaluate(**kwargs):
 
     log_lines = []
     msg = "method, use_bfgs, expression, predicted, trial, k_fold, tree_distance, exact,"\
+            "in_nmae, in_nmse,"\
             "in_r2, in_r2_cuttoff, in_r2_over_95, in_r2_over_99, in_r2_over_999, in_isclose,"\
+            "ex_nmae, ex_nmse,"\
             "ex_r2, ex_r2_cuttoff, ex_r2_over_95, ex_r2_over_99, ex_r2_over_999, ex_isclose,"\
             "failed, time_elapsed, git_hash, entry_point\n"
 
@@ -250,8 +257,17 @@ def evaluate(**kwargs):
                             else:
                                 metric_function = lambda **kwargs: "None"
 
-                            id_scores.append(metric_function(targets=id_y_target, predictions=id_y_predicted))
-                            ed_scores.append(metric_function(targets=ed_y_target, predictions=ed_y_predicted))
+                            # have had some idiosyncratic failures where a float is encountered here
+                            # instead of an array. 
+                            if type(id_y_target) == float or type(id_y_predicted) == float:
+                                id_scores.append("None")
+                            else:
+                                id_scores.append(metric_function(targets=id_y_target, predictions=id_y_predicted))
+
+                            if type(ed_y_target) == float or type(ed_y_predicted) == float:
+                                ed_scores.append("None")
+                            else:
+                                ed_scores.append(metric_function(targets=ed_y_target, predictions=ed_y_predicted))
 
                     partial_msg += f"{method}, {use_bfgs}, {expression}, {predicted_expression}, {trial}, {fold}"
 
@@ -302,7 +318,7 @@ if __name__ == "__main__": #pragma: no cover
     parser.add_argument("-k", "--k-folds", type=int, default=4, \
             help="number of cross-validation splits to use")
     parser.add_argument("-m", "--metrics", type=str, nargs="+",\
-        default=["exact", "tree_distance", "r2",\
+        default=["exact", "tree_distance", "nmae", "nmse","r2",\
             "r2_over_95", "r2_over_99", "r2_over_999",\
             "r2_cutoff", "isclose"],\
         help="metrics to include in benchmarks,"
