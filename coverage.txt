@@ -1,12 +1,13 @@
 Name                        Stmts   Miss  Cover   Missing
 ---------------------------------------------------------
-symr/benchmark.py             143      5    97%   51, 56, 63, 224, 229
+symr/benchmark.py             146      7    95%   51, 56, 63, 224, 229, 256-257
 symr/fake_sr.py                83      2    98%   72-73
 symr/helpers.py                 7      0   100%
 symr/metrics.py                80      0   100%
 symr/nsrts_wrapper.py         167     15    91%   28, 39, 63-64, 215, 269, 277-285, 290-291, 346
-symr/symformer_wrapper.py      61      9    85%   23-24, 81-89, 94
+symr/pysr_wrapper.py           41     41     0%   1-75
+symr/symformer_wrapper.py      61     11    82%   23-24, 53-54, 81-89, 94
 symr/symgpt_wrapper.py        143     20    86%   27, 57, 60, 79-80, 88-94, 142-150, 240
 symr/wrappers.py               12      0   100%
 ---------------------------------------------------------
-TOTAL                         696     51    93%
+TOTAL                         740     96    87%
