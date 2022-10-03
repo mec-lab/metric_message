@@ -22,6 +22,7 @@ from symr_tests.symr.test_wrappers import TestBaseWrapper
 from symr_tests.symr.test_nsrts_wrapper import TestNSRTSWrapper
 from symr_tests.symr.test_symgpt_wrapper import TestSymGPTWrapper
 from symr_tests.symr.test_symformer_wrapper import TestSymformerWrapper
+from symr_tests.symr.test_pysr_wrapper import TestPySRWrapper
 
 from symr_tests.symr.test_benchmark import TestEval,\
         TestBenchmark
