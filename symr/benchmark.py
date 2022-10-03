@@ -257,11 +257,17 @@ def evaluate(**kwargs):
                             else:
                                 metric_function = lambda **kwargs: "None"
 
-                            try:
+                            # have had some idiosyncratic failures where a float is encountered here
+                            # instead of an array. 
+                            if type(id_y_target) == float or type(id_y_predicted) == float:
+                                id_scores.append("None")
+                            else:
                                 id_scores.append(metric_function(targets=id_y_target, predictions=id_y_predicted))
+
+                            if type(ed_y_target) == float or type(ed_y_predicted) == float:
+                                ed_scores.append("None")
+                            else:
                                 ed_scores.append(metric_function(targets=ed_y_target, predictions=ed_y_predicted))
-                            except:
-                                import pdb; pdb.set_trace()
 
                     partial_msg += f"{method}, {use_bfgs}, {expression}, {predicted_expression}, {trial}, {fold}"
 
