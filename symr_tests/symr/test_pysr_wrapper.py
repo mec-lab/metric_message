@@ -9,7 +9,7 @@ import sympy as sp
 from symr.wrappers import BaseWrapper
 from symr.pysr_wrapper import PySRWrapper
 
-class TestNSRTSWrapper(unittest.TestCase):
+class TestPySRWrapper(unittest.TestCase):
 
     def setUp(self):
         pass
