@@ -161,8 +161,6 @@ def evaluate(**kwargs):
                     id_val_inputs = {}
                     # ex-distribution validation inputs (extrapolation)
                     ed_val_inputs = {}
-
-
                     
                     for v_index, variable in \
                             enumerate(variables[expr_index][1:].split(" ")):
@@ -188,12 +186,13 @@ def evaluate(**kwargs):
 
                         # example data, used for SR inference
                         my_inputs[variable] = np.random.uniform(low=id_low, high=id_high,\
-                                size=(sample_size,1))
+                                size=(sample_size,1)) + 0 * 1.j
 
                         # in-distribution evaluation data
                         # different samples taken from the same range
                         id_val_inputs[variable] = np.random.uniform(low=id_low, high=id_high,\
-                                size=(sample_size,1))
+                                size=(sample_size,1)) + 0. * 1.j
+
                         
                         # ex-distribution evaluation data
                         # different samples taken from outside example range
@@ -202,7 +201,9 @@ def evaluate(**kwargs):
                         ed_val_1 = np.random.uniform(low=id_high, high=high,\
                                 size=(sample_size_1,1))
                         ed_val_inputs[variable] = np.append(ed_val_0, ed_val_1, \
-                                axis=0)
+                                axis=0)+ 0 * 1.j
+
+
 
                     lambda_variables = ",".join(variables[expr_index][1:].split(" "))
 
