@@ -2,7 +2,7 @@ import os
 
 from functools import reduce
 
-def load_benchmark(filepath="data/nguyen.csv"):
+def load_benchmark(filepath=None):
 
     if filepath is None:
         filepath="data/nguyen_test.csv"
@@ -14,12 +14,12 @@ def load_benchmark(filepath="data/nguyen.csv"):
     return lines
 
 
-def r2_over_threshold(r2, thesholds=None):
+def r2_over_threshold(r2, thresholds=None):
 
     if thresholds is None:
-        thresh = np.arange(0,1.0,0.01)
+        thresholds = np.arange(0,1.0,0.01)
 
-    r2_ot = [(x > threshold).sum() / x.shape[0] for threshold in thresh ]
+    r2_ot = [(r2 > threshold).sum() / r2.shape[0] for threshold in thresholds ]
 
     return r2_ot
 

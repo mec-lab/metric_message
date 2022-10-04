@@ -26,6 +26,9 @@ from symr_tests.symr.test_pysr_wrapper import TestPySRWrapper
 
 from symr_tests.symr.test_benchmark import TestEval,\
         TestBenchmark
+from symr_tests.symr.test_helpers import TestLoadBenchmark,\
+        TestR2OverThreshold,\
+        TestR2AUC
 
 if __name__ == "__main__": #pragma: no cover    
     np.random.seed(42)
