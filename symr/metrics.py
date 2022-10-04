@@ -104,7 +104,11 @@ def compute_r2_raw(targets, predictions):
     ss_residuals = np.sum((targets - predictions)**2)
     ss_total = np.sum((targets - target_mean)**2)
 
-    return 1.0 - (ss_residuals + eps) / (ss_total + eps)
+    result =  1.0 - (ss_residuals + eps) / (ss_total + eps)
+
+    result = result.real
+
+    return result
 
 def compute_r2(targets, predictions):
     
