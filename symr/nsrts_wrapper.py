@@ -45,7 +45,7 @@ class NSRTSWrapper(BaseWrapper):
         self.load_parameters()
 
 
-    def parse_filter(self, expression, variables=["x"]):
+    def parse_filter(self, expression, support=[[0,1]], variables=["x"]):
         """
         Sometimes cleaning the string isn't enough to yield an actual expression.
 
@@ -54,7 +54,13 @@ class NSRTSWrapper(BaseWrapper):
         try: 
             # SymGPT currently only handles one variable: x1
             my_fn = sp.lambdify(variables, expr=expression)
-            my_inputs = {key:np.random.rand(3,1) for key in variables}
+
+            my_inputs = {}
+            for idx, key in enumerate(variables):
+                range_stretcr = (support[idx][1] - support[idx][0])
+                my_input = range_stretch * np.random.rand(10,1) - support[idx][0]
+                my_inputs[key] = my_input 
+
             _ = my_fn(**my_inputs)
 
             # return expression if it was successfuly parsed into a function 
@@ -260,6 +266,8 @@ class NSRTSWrapper(BaseWrapper):
 
         x = None
 
+        info = {}
+
         for key in kwargs.keys():
             if x is None:
                 x = kwargs[key].reshape(-1,1)
@@ -291,13 +299,17 @@ class NSRTSWrapper(BaseWrapper):
                 return "+".join([f"1.0 * {my_var}" \
                         for my_var in kwargs.keys()]), {"failed": True}
 
+
+        support = []
+        for key in kwargs.keys():
+            support.append([np.min(kwargs[key]), np.max(kwargs[key])])
+
+        expression, info["failed"] = self.parse_filter(expression, support, kwargs.keys())
+
         for idx, key in enumerate(kwargs.keys()):
             
             expression = expression.replace(f"x_{idx+1}", key)
 
-        expression, failed = self.parse_filter(expression, kwargs.keys())
-
-        info = {"failed": failed}
         t1 = time.time()
         info["time_elapsed"] = t1-t0
         

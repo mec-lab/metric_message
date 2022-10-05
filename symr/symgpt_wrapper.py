@@ -61,7 +61,8 @@ class SymGPTWrapper(BaseWrapper):
         
         return cleaned_expression
 
-    def parse_filter(self, expression, variables=["x"]):
+
+    def parse_filter(self, expression, support=[[0,1]], variables=["x"]):
         """
         Sometimes cleaning the string isn't enough to yield an actual expression.
 
@@ -70,7 +71,13 @@ class SymGPTWrapper(BaseWrapper):
         try: 
             # SymGPT currently only handles one variable: x1
             my_fn = sp.lambdify(variables, expr=expression)
-            my_inputs = {key:np.random.rand(3,1) for key in variables}
+
+            my_inputs = {}
+            for idx, key in enumerate(variables):
+                range_stretcr = (support[idx][1] - support[idx][0])
+                my_input = range_stretch * np.random.rand(10,1) - support[idx][0]
+                my_inputs[key] = my_input 
+
             _ = my_fn(**my_inputs)
 
             # return expression if it was successfuly parsed into a function 
@@ -83,6 +90,7 @@ class SymGPTWrapper(BaseWrapper):
     def __call__(self, target, **kwargs):
         
         t0 = time.time()
+        info = {}
 
         if len(kwargs.keys()) > 1: 
             if self.verbose:
@@ -167,8 +175,11 @@ class SymGPTWrapper(BaseWrapper):
             else:
                 pred_expression += my_char
 
-        expression, failed = self.parse_filter(pred_expression)
-        info = {"failed": failed}
+        support = []
+        for key in kwargs.keys():
+            support.append([np.min(kwargs[key]), np.max(kwargs[key])])
+
+        expression, info["failed"] = self.parse_filter(expression, support, kwargs.keys())
 
         for idx, key in enumerate(kwargs.keys()):
             
