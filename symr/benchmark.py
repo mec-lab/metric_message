@@ -186,12 +186,12 @@ def evaluate(**kwargs):
 
                         # example data, used for SR inference
                         my_inputs[variable] = np.random.uniform(low=id_low, high=id_high,\
-                                size=(sample_size,1)) + 0 * 1.j
+                                size=(sample_size,1))
 
                         # in-distribution evaluation data
                         # different samples taken from the same range
                         id_val_inputs[variable] = np.random.uniform(low=id_low, high=id_high,\
-                                size=(sample_size,1)) + 0. * 1.j
+                                size=(sample_size,1))
 
                         
                         # ex-distribution evaluation data
@@ -201,7 +201,7 @@ def evaluate(**kwargs):
                         ed_val_1 = np.random.uniform(low=id_high, high=high,\
                                 size=(sample_size_1,1))
                         ed_val_inputs[variable] = np.append(ed_val_0, ed_val_1, \
-                                axis=0)+ 0 * 1.j
+                                axis=0)
 
 
 
