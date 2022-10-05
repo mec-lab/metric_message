@@ -26,7 +26,7 @@ class PySRWrapper(BaseWrapper):
         self.load_parameters()
 
 
-    def parse_filter(self, expression, variables=["x"]):
+    def parse_filter(self, expression, support=[[0,1]], variables=["x"]):
         """
         Sometimes cleaning the string isn't enough to yield an actual expression.
 
@@ -35,7 +35,13 @@ class PySRWrapper(BaseWrapper):
         try: 
             # SymGPT currently only handles one variable: x1
             my_fn = sp.lambdify(variables, expr=expression)
-            my_inputs = {key:np.random.rand(3,1) for key in variables}
+
+            my_inputs = {}
+            for idx, key in enumerate(variables):
+                range_stretch = (support[idx][1] - support[idx][0])
+                my_input = range_stretch * np.random.rand(10,1) - support[idx][0]
+                my_inputs[key] = my_input 
+
             _ = my_fn(**my_inputs)
 
             # return expression if it was successfuly parsed into a function 
@@ -49,8 +55,6 @@ class PySRWrapper(BaseWrapper):
 
         best_expression = ""
 
-        return best_expression
-
     def __call__(self, target, **kwargs):
         
         t0 = time.time()
@@ -58,6 +62,7 @@ class PySRWrapper(BaseWrapper):
         keys = list(kwargs.keys())
 
         x = kwargs[keys[0]].reshape(-1,1)
+        info = {}
 
         for index, key in enumerate(keys[1:]):
             
@@ -68,14 +73,8 @@ class PySRWrapper(BaseWrapper):
 
             expression = str(self.model.get_best()["sympy_format"])
 
-            for idx, key in enumerate(kwargs.keys()):
-                expression = expression.replace(f"x{idx}", key)
 
-            expression, failed = self.parse_filter(expression, kwargs.keys())
 
-            t1 = time.time()
-            info = {"failed": failed}
-            info["time_elapsed"] = t1-t0
 
         except:
 
@@ -86,6 +85,17 @@ class PySRWrapper(BaseWrapper):
             info = {"failed": True}
             info["time_elapsed"] = t1-t0
 
+
+        support = []
+        for idx, key in enumerate(kwargs.keys()):
+            expression = expression.replace(f"x{idx}", key)
+        for key in kwargs.keys():
+            support.append([np.min(kwargs[key]), np.max(kwargs[key])])
+
+        expression, info["failed"] = self.parse_filter(expression, support, kwargs.keys())
+
+        t1 = time.time()
+        info["time_elapsed"] = t1-t0
 
         return expression, info
 
