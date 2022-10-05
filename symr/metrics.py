@@ -72,8 +72,8 @@ def compute_tree_distance(expression_a, expression_b):
         (here)
     """
 
-    sympy_expression_a = sp.simplify(expression_a)
-    sympy_expression_b = sp.simplify(expression_b)
+    sympy_expression_a = sp.sympify(expression_a)
+    sympy_expression_b = sp.sympify(expression_b)
 
     sp_tree_a = sp.srepr(sympy_expression_a)
     sp_tree_b = sp.srepr(sympy_expression_b)
