@@ -280,6 +280,8 @@ def evaluate(**kwargs):
 
                         partial_msg += f", {score}"
 
+                    if "nan" in partial_msg:
+                        failed = True
                     partial_msg += f", {failed}, {time_elapsed}" 
                     
                     partial_msg += "\n"

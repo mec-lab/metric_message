@@ -49,7 +49,7 @@ class SymformerWrapper(BaseWrapper):
 
             my_inputs = {}
             for idx, key in enumerate(variables):
-                range_stretcr = (support[idx][1] - support[idx][0])
+                range_stretch = (support[idx][1] - support[idx][0])
                 my_input = range_stretch * np.random.rand(10,1) - support[idx][0]
                 my_inputs[key] = my_input 
 

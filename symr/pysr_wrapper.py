@@ -38,7 +38,7 @@ class PySRWrapper(BaseWrapper):
 
             my_inputs = {}
             for idx, key in enumerate(variables):
-                range_stretcr = (support[idx][1] - support[idx][0])
+                range_stretch = (support[idx][1] - support[idx][0])
                 my_input = range_stretch * np.random.rand(10,1) - support[idx][0]
                 my_inputs[key] = my_input 
 
@@ -62,6 +62,7 @@ class PySRWrapper(BaseWrapper):
         keys = list(kwargs.keys())
 
         x = kwargs[keys[0]].reshape(-1,1)
+        info = {}
 
         for index, key in enumerate(keys[1:]):
             
@@ -72,13 +73,8 @@ class PySRWrapper(BaseWrapper):
 
             expression = str(self.model.get_best()["sympy_format"])
 
-            for idx, key in enumerate(kwargs.keys()):
-                expression = expression.replace(f"x{idx}", key)
 
 
-            t1 = time.time()
-            info = {"failed": failed}
-            info["time_elapsed"] = t1-t0
 
         except:
 
@@ -91,11 +87,15 @@ class PySRWrapper(BaseWrapper):
 
 
         support = []
+        for idx, key in enumerate(kwargs.keys()):
+            expression = expression.replace(f"x{idx}", key)
         for key in kwargs.keys():
             support.append([np.min(kwargs[key]), np.max(kwargs[key])])
 
-        expression, failed = self.parse_filter(expression, support, kwargs.keys())
-        info["failed"] = self.parse_filter(expression)
+        expression, info["failed"] = self.parse_filter(expression, support, kwargs.keys())
+
+        t1 = time.time()
+        info["time_elapsed"] = t1-t0
 
         return expression, info
 

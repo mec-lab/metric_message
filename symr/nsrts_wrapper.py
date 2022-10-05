@@ -57,7 +57,7 @@ class NSRTSWrapper(BaseWrapper):
 
             my_inputs = {}
             for idx, key in enumerate(variables):
-                range_stretcr = (support[idx][1] - support[idx][0])
+                range_stretch = (support[idx][1] - support[idx][0])
                 my_input = range_stretch * np.random.rand(10,1) - support[idx][0]
                 my_inputs[key] = my_input 
 
@@ -300,15 +300,16 @@ class NSRTSWrapper(BaseWrapper):
                         for my_var in kwargs.keys()]), {"failed": True}
 
 
+
+        for idx, key in enumerate(kwargs.keys()):
+            
+            expression = expression.replace(f"x_{idx+1}", key)
+
         support = []
         for key in kwargs.keys():
             support.append([np.min(kwargs[key]), np.max(kwargs[key])])
 
         expression, info["failed"] = self.parse_filter(expression, support, kwargs.keys())
-
-        for idx, key in enumerate(kwargs.keys()):
-            
-            expression = expression.replace(f"x_{idx+1}", key)
 
         t1 = time.time()
         info["time_elapsed"] = t1-t0
