@@ -1,5 +1,5 @@
 expression, support, number_variables, variables, complexity, diversity, comments
--x*y/(0.5*x**2 + 1) - x + 20, -5 5 -5 5 , 2, x y, 27, 3.1885994659157797, bacterial respiration
+-x*y/(0.5*x**2 + 1) - x + 20, -5 5 -5 5 , 2, x y, 26, 3.151458510243029, bacterial respiration
 -x*y/(0.5*x**2 + 1) + 10, -5 5 -5 5 , 2, x y, 21, 2.944832507989743, bacterial respiration
 -sin(theta) - 0.5*sin(phi - theta), -5 5 -5 5 , 2, theta phi, 13, 2.5070264355574188, bar magnets
 -sin(phi) + 0.5*sin(phi - theta), -5 5 -5 5 , 2, theta phi, 13, 2.5070264355574183, bar magnets
