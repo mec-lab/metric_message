@@ -270,7 +270,7 @@ def evaluate(**kwargs):
                             else:
                                 ed_scores.append(metric_function(targets=ed_y_target, predictions=ed_y_predicted))
 
-                    partial_msg += f"{method}, {use_bfgs}, {expression}, {predicted_expression}, {trial}, {fold}"
+                    partial_msg += f'{method}, {use_bfgs}, "{expression}", "{predicted_expression}", {trial}, {fold}'
 
                     for metric, score in zip(metric_dict.keys(), id_scores):
 
