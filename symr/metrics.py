@@ -10,6 +10,12 @@ def compute_complexity(expression):
     tree_nodes = [element for element in sp.preorder_traversal(sp.simplify(expression))]
     return len(tree_nodes)
 
+def compute_tree_traversal(expression):
+        
+    tree_nodes = [element for element in sp.preorder_traversal(sp.sympify(expression))]
+
+    return len(tree_nodes)
+
 def compute_shannon_diversity(expression):
     # H = -Σpi * ln(pi)    
 

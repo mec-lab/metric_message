@@ -9,7 +9,8 @@ from symr.metrics import compute_tree_distance, compute_exact_equivalence,\
         compute_r2_raw, compute_r2, compute_r2_truncated, \
         compute_isclose_accuracy, compute_r2_over_threshold,\
         get_r2_threshold_function,\
-        compute_relative_error, compute_shannon_diversity, compute_complexity
+        compute_relative_error, compute_shannon_diversity, \
+        compute_complexity, compute_tree_traversal
 
 import sklearn
 import sklearn.metrics
@@ -55,11 +56,29 @@ class TestComputeComplexity(unittest.TestCase):
         h_a = compute_complexity(expression_a)
         h_b = compute_complexity(expression_b)
         h_c = compute_complexity(expression_c)
-        h_c2 = compute_complexity(expression_c)
+        h_c2 = compute_complexity(sp.sympify(expression_c))
 
         self.assertGreater(h_b, h_a)
         self.assertGreater(h_c, h_a)
         self.assertEqual(h_c, h_c2)
+
+class TestComputeTreeTraversal(unittest.TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_compute_tree_traversal(self):
+
+        expression_a = "x"
+        expression_b = "x+y+z"
+        expression_c = "x*y/z"
+
+        h_a = compute_complexity(expression_a)
+        h_b = compute_complexity(expression_b)
+        h_c = compute_complexity(expression_c)
+
+        self.assertGreater(h_b, h_a)
+        self.assertGreater(h_c, h_a)
 
 class TestExactEquivalence(unittest.TestCase):
 
