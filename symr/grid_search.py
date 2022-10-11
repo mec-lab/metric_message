@@ -36,10 +36,9 @@ def main(**kwargs):
 
     # static context parameters
     parameters = {\
-                 "-e": [0.25],\
                  "-k": [3],
                  "-r": [42],\
-                 "-t": [6],\
+                 "-t": [5],\
                   "-w": [1]\
                   }
 
@@ -48,6 +47,7 @@ def main(**kwargs):
     parameters["-d"] = kwargs["degree"]
     parameters["-z"] = kwargs["sample_size"]
     parameters["-n"] = kwargs["beam_width"]
+    parameters["-e"] = kwargs["ex_proportion"]
 
     if type(parameters["-b"]) is not list:
         parameters["-b"] = [parameters["-b"]] 
@@ -57,6 +57,8 @@ def main(**kwargs):
         parameters["-z"] = [parameters["-z"]]
     if type(parameters["-n"]) is not list:
         parameters["-n"] = [parameters["-n"]]
+    if type(parameters["-e"]) is not list:
+        parameters["-e"] = [parameters["-e"]]
 
     results_start = f"results/{method}"
 
@@ -67,10 +69,9 @@ def main(**kwargs):
 
     cmd_start = f"python -m symr.benchmark -s {method} -i {input_dataset} "
 
-    total_options = np.sum([len(parameters[key]) for key in parameters.keys()])
+    total_options = np.sum([len(parameters[key])-1 for key in parameters.keys()])
 
-    number_runs = 1 #total_options * 2
-
+    number_runs = total_options * 3
 
     for attempt in range(number_runs):
         results_filename = ""
@@ -130,6 +131,8 @@ if __name__ == "__main__":
             help="use np.clip(..., -1. 1.) before calculating stats from r2")
     parser.add_argument("-d", "--degree", type=int, default=10, nargs="+",\
             help="number of terms to use for fake sr methods PolySR, FourierSR, and RandomSR")
+    parser.add_argument("-e", "--ex_proportion", type=float, default=0.25, nargs="+",\
+            help="proportion of support range to use for extrapolation")
     parser.add_argument("-i", "--input_dataset", type=str, default="data/nguyen_univariate.csv",\
             help="benchmark csv")
     parser.add_argument("-m", "--metrics", type=str, nargs="+",\
