@@ -84,6 +84,8 @@ def evaluate(**kwargs):
 
     if "write_csv" in kwargs.keys():
         write_csv = kwargs["write_csv"]
+    elif "output_filename" in kwargs.keys():
+        write_csv = 1
     else:
         write_csv = False 
 
@@ -337,6 +339,8 @@ if __name__ == "__main__": #pragma: no cover
             "   isclose"\
             "default is to assess all metrics"
         )
+    parser.add_argument("-n", "--beam_width", type=int, default=1,\
+            help="number of equations, aka beam_width")
     parser.add_argument("-o", "--output_filename", type=str, default="results/temp.csv",\
             help="filename to save csv")
     parser.add_argument("-r", "--random_seed", type=int, default=42,\

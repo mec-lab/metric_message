@@ -30,7 +30,7 @@ class SymformerWrapper(BaseWrapper):
 
         self.my_device = "cpu"
         self.beam_width = kwargs["beam_width"] \
-                if "beam_width" in kwargs.keys() else 4
+                if "beam_width" in kwargs.keys() else 1
 
     
         self.initialize_model()
