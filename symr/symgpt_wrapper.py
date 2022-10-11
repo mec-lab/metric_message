@@ -44,7 +44,6 @@ class SymGPTWrapper(BaseWrapper):
         self.load_parameters()
         self.verbose = 1
 
-
     def clean_expression(self, expression):
 
         cleaned_expression = "".join(expression).split(">")[0][:].replace("s","x").replace("q","s").replace("***","**")
