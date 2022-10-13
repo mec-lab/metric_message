@@ -98,31 +98,40 @@ def main(**kwargs):
             " ex_r2_over_99", " ex_r2_over_999",\
             ]
 
-    for filepath in results_files:
+    try:
+        for filepath in results_files:
 
-        df = pd.read_csv(filepath)
+            df = pd.read_csv(filepath)
 
-        my_metric_raw = df.loc[df["method"] == method][metric_of_choice]
-        my_success = (" False" == df.loc[df["method"] == method]["failed"]).to_numpy(dtype=float)
+            for key in df.columns:
+                if key.endswith(metric_of_choice):
+                    metric_of_choice = key
 
-        if metric_of_choice in boolean_metrics:
-            my_metric = (" True" == my_metric_raw[0 < my_success]).to_numpy(dtype=float)
-        else:
-            if use_clip:
-                my_metric = np.clip(my_metric_raw[0 < my_success].to_numpy(dtype=float), -1., 1.0)
+            my_metric_raw = df.loc[df["method"] == method][metric_of_choice]
+            my_success = (" False" == df.loc[df["method"] == method]["failed"]).to_numpy(dtype=float)
+
+            if metric_of_choice in boolean_metrics:
+                my_metric = (" True" == my_metric_raw[0 < my_success]).to_numpy(dtype=float)
             else:
-                my_metric = my_metric_raw[0. < my_success].to_numpy(dtype=float)
+                my_success *= np.isfinite(my_metric_raw.to_numpy(dtype=float))
+                if use_clip:
+                    my_metric = np.clip(my_metric_raw[0 < my_success].to_numpy(dtype=float), -1., 1.0)
+                else:
+                    my_metric = my_metric_raw[0. < my_success].to_numpy(dtype=float)
 
-        my_scores.append(np.mean(my_metric))
+            my_scores.append(np.mean(my_metric))
 
-    import pdb; pdb.set_trace()
-    sort_indices = list(np.argsort(my_scores))
-    sort_indices.reverse()
-    print(f"best run was {np.array(results_files)[sort_indices[0]]}")
-    print(f"best parameters were {run_parameters[sort_indices[0]]}")
+        sort_indices = list(np.argsort(my_scores))
+        sort_indices.reverse()
+        print(f"best run was {np.array(results_files)[sort_indices[0]]}")
+        print(f"best scores were {np.array(my_scores)[sort_indices]}")
+        print(f"best parameters were {np.array(run_parameters)[sort_indices[0]]}")
+    except:
+        print("something went wrong so here we are")
+        import pdb; pdb.set_trace()
 
 if __name__ == "__main__":
-    
+
     parser = argparse.ArgumentParser("do a grid search (or a barrel roll)")
 
     parser.add_argument("-b", "--use_bfgs", type=int, default=1, nargs="+",\
