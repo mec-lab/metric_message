@@ -1,4 +1,4 @@
-# The Metric is the Massage in Neural Symbolic Regression
+# The Metric is the Message in Neural Symbolic Regression
 ## Comparing generalizing symbolic regression methods across metrics from the literature
 
 ## Quick setup
