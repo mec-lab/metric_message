@@ -5,7 +5,7 @@
 
 ```
 git clone https://github.com/mec-lab/metric_message.git
-cd metric_massage
+cd metric_message
 
 virtualenv symr --python=python3.8
 source symr/bin/activate
