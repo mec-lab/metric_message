@@ -31,7 +31,7 @@ This repository is designed for testing and comparing symbolic regression method
 Clone the repo and install
 
 ```
-git clone git@github.com:SymposiumOrganization/NeuralSymbolicRegressionThatScales.git nsrts
+git clone https://github.com/SymposiumOrganization/NeuralSymbolicRegressionThatScales.git nsrts
 cd nsrts/src
 pip install -e .
 cd ../../
@@ -56,7 +56,7 @@ You can download trained weights for NSRTS by following the links from the [repo
 Clone the repo. I recommend cloning my fork:
 
 ```
-git clone git@github.com:riveSunder/symbolicgpt.git symgpt
+git clone https://github.com/riveSunder/symbolicgpt.git symgpt
 ```
 
 
@@ -70,7 +70,7 @@ git clone git@github.com:riveSunder/symbolicgpt.git symgpt
 You can clone the repository from my fork, which includes any changes I have needed to make to get things to work locally. 
 
 ```
-git clone git@github.com:riveSunder/symformer.git symf
+git clone https://github.com/riveSunder/symformer.git symf
 ```
 
 Alternatively you can clone the original repo from [`vastlik`](
@@ -85,7 +85,7 @@ Next, cd into the repo and (with your virtualenv activated) install the requirem
 
 ```
 cd symf
-pip install -r requirements.txt 
+pip install -r requirements.txt
 ```
 
 My fork of the symformer repo includes a `setup.py`, so you can install it in editable mode. This helps with non-local imports in the main repo. 
