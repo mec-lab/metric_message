@@ -4,7 +4,7 @@
 ## Quick setup
 
 ```
-git clone git@github.com:riveSunder/metric_massage.git
+git clone https://github.com/mec-lab/metric_message.git
 cd metric_massage
 
 virtualenv symr --python=python3.8
